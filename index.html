@@ -1,0 +1,2119 @@
+<title>RedeLab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* ===== Layout concept: fixed left rail of modules (levels color-coded) + single scrollable
+   content pane on the right; widgets are nested "panel" components inside each module. ===== */
+:root{
+  --bg:#f3f6fb; --surface:#ffffff; --surface-2:#eaeff8; --surface-3:#dde5f3;
+  --fg:#121a2b; --fg-muted:#5a6684; --border:#d6dfee;
+  --accent:#0e7490; --accent-ink:#ffffff; --accent-2:#b45309;
+  --good:#15803d; --bad:#b91c1c;
+  --lvl-basico:#15803d; --lvl-inter:#b45309; --lvl-avancado:#6d28d9; --lvl-guia:#5a6684;
+  --shadow:0 1px 2px rgba(18,26,43,.06),0 8px 24px -12px rgba(18,26,43,.18);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a0f1c; --surface:#111a2c; --surface-2:#172339; --surface-3:#1f2d48;
+    --fg:#e8edf8; --fg-muted:#92a0c2; --border:#263654;
+    --accent:#22d3ee; --accent-ink:#06222a; --accent-2:#fbbf24;
+    --good:#4ade80; --bad:#f87171;
+    --lvl-basico:#4ade80; --lvl-inter:#fbbf24; --lvl-avancado:#a78bfa; --lvl-guia:#92a0c2;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px -14px rgba(0,0,0,.65);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a0f1c; --surface:#111a2c; --surface-2:#172339; --surface-3:#1f2d48;
+  --fg:#e8edf8; --fg-muted:#92a0c2; --border:#263654;
+  --accent:#22d3ee; --accent-ink:#06222a; --accent-2:#fbbf24;
+  --good:#4ade80; --bad:#f87171;
+  --lvl-basico:#4ade80; --lvl-inter:#fbbf24; --lvl-avancado:#a78bfa; --lvl-guia:#92a0c2;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px -14px rgba(0,0,0,.65);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:'Figtree','Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.6}
+h1,h2,h3,h4{font-family:'Chakra Petch','Segoe UI',sans-serif;font-weight:600;letter-spacing:.2px;text-wrap:balance;color:var(--fg)}
+code,.mono,kbd,.ip,.kv-val,table.proto td:nth-child(2){font-family:'IBM Plex Mono','Consolas',monospace}
+a{color:var(--accent)}
+p{max-width:68ch}
+::selection{background:var(--accent);color:var(--accent-ink)}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.001ms !important;transition-duration:.001ms !important}}
+
+.app{min-height:100%;display:flex;flex-direction:column}
+
+/* ---- topbar ---- */
+.topbar{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:40;
+  display:flex;align-items:center;gap:14px;padding:10px 18px;
+  background:color-mix(in srgb, var(--surface) 92%, transparent);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--border);
+}
+.brand{display:flex;align-items:center;gap:9px;font-family:'Chakra Petch';font-weight:700;font-size:17px;letter-spacing:.3px;white-space:nowrap}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent)}
+.topbar .spacer{flex:1}
+.topbar-progress{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--fg-muted);min-width:0}
+.ring{width:30px;height:30px;flex:none}
+.ring circle{fill:none;stroke-width:4}
+.ring .bg{stroke:var(--surface-3)}
+.ring .fg{stroke:var(--accent);stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dasharray .4s}
+.iconbtn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg);cursor:pointer;font-size:15px;flex:none}
+.iconbtn:hover{border-color:var(--accent)}
+
+/* ---- layout ---- */
+.layout{flex:1;display:flex;min-height:0;width:100%}
+.sidebar{
+  width:272px;flex:none;border-right:1px solid var(--border);background:var(--surface);
+  display:flex;flex-direction:column;position:sticky;top:53px;align-self:flex-start;
+  height:calc(100dvh - 53px - env(safe-area-inset-top,0px));overflow:hidden;
+}
+.sidebar-search{padding:12px;border-bottom:1px solid var(--border)}
+.sidebar-search input{width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg);font:inherit;font-size:13.5px}
+.sidebar-search input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.navlist{flex:1;overflow-y:auto;padding:8px}
+.nav-group-label{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--fg-muted);padding:12px 10px 6px}
+.nav-item{
+  width:100%;display:flex;align-items:center;gap:10px;text-align:left;background:none;border:1px solid transparent;
+  border-radius:9px;padding:8px 9px;cursor:pointer;color:var(--fg);font:inherit;font-size:13.5px;margin-bottom:2px;
+}
+.nav-item:hover{background:var(--surface-2)}
+.nav-item.active{background:var(--surface-2);border-color:var(--border)}
+.nav-item .num{width:21px;height:21px;border-radius:50%;border:1.5px solid var(--lvl,var(--border));display:flex;align-items:center;justify-content:center;font-size:10.5px;font-family:'IBM Plex Mono';color:var(--lvl,var(--fg-muted));flex:none}
+.nav-item .lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-item .check{width:16px;height:16px;flex:none;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent}
+.nav-item.done .check{background:var(--good);border-color:var(--good);color:var(--surface)}
+
+.content{flex:1;min-width:0;display:flex;justify-content:center;padding:28px 22px 80px}
+.module-inner{width:100%;max-width:840px}
+.module{animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ---- common bits ---- */
+.eyebrow{display:flex;align-items:center;gap:8px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--fg-muted);margin-bottom:8px}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:600;border:1px solid var(--border);background:var(--surface-2)}
+.badge.basico{color:var(--lvl-basico);border-color:color-mix(in srgb,var(--lvl-basico) 40%,var(--border))}
+.badge.intermediario{color:var(--lvl-inter);border-color:color-mix(in srgb,var(--lvl-inter) 40%,var(--border))}
+.badge.avancado{color:var(--lvl-avancado);border-color:color-mix(in srgb,var(--lvl-avancado) 40%,var(--border))}
+.module h1{font-size:28px;margin:0 0 6px}
+.module > p.lede{color:var(--fg-muted);font-size:16px;margin-top:0}
+.module h2{font-size:19px;margin:34px 0 10px;padding-top:6px;border-top:1px solid var(--border)}
+.module h2:first-of-type{border-top:none;padding-top:0;margin-top:22px}
+.module h3{font-size:15px;margin:18px 0 8px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.panel{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:18px;margin:14px 0}
+.panel h3{margin-top:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+ul.tidy{padding-left:20px;margin:8px 0}
+ul.tidy li{margin:5px 0}
+.callout{border-radius:12px;padding:12px 14px;margin:14px 0;border:1px solid var(--border);display:flex;gap:10px;font-size:14px}
+.callout .ic{flex:none;font-family:'Chakra Petch';font-weight:700;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px}
+.callout.tip{background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+.callout.tip .ic{background:var(--accent);color:var(--accent-ink)}
+.callout.warn{background:color-mix(in srgb,var(--accent-2) 14%,var(--surface))}
+.callout.warn .ic{background:var(--accent-2);color:#2a1a02}
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:480px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);white-space:nowrap}
+th{background:var(--surface-2);font-family:'Chakra Petch';font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+tr:last-child td{border-bottom:none}
+.tag{display:inline-block;padding:1px 7px;border-radius:6px;font-size:11px;font-family:'IBM Plex Mono';background:var(--surface-3)}
+.tag.tcp{color:var(--accent)}.tag.udp{color:var(--accent-2)}
+
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--fg);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.05)}
+.btn.sm{padding:6px 11px;font-size:12.5px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---- subnet calculator ---- */
+.calc-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:11.5px;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.05em}
+.field input{padding:9px 11px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--fg);font-family:'IBM Plex Mono';font-size:14px;width:170px}
+.field input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.field.small input{width:80px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin-top:4px}
+.kv dt{color:var(--fg-muted);font-size:12.5px;align-self:center}
+.kv dd{margin:0;font-family:'IBM Plex Mono';font-size:14.5px}
+.bin{font-family:'IBM Plex Mono';font-size:14px;letter-spacing:1px;word-break:break-all;line-height:2}
+.bin .net{color:var(--accent);font-weight:600}
+.bin .host{color:var(--accent-2);font-weight:600}
+.bin .dot{color:var(--fg-muted);margin:0 2px}
+.legend{display:flex;gap:16px;font-size:12px;color:var(--fg-muted);margin-top:6px}
+.legend span.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.err{color:var(--bad);font-size:13.5px}
+
+/* ---- encapsulation stack ---- */
+.encap-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding:10px 0}
+.encap-box{border:2px solid;border-radius:10px;padding:14px;display:flex;flex-direction:column;align-items:center;transition:all .3s}
+.encap-box span{font-family:'IBM Plex Mono';font-size:11.5px;font-weight:600;margin-bottom:8px;align-self:flex-start}
+.encap-box.l7{border-color:var(--accent);color:var(--accent)}
+.encap-box.l6{border-color:color-mix(in srgb,var(--accent) 85%, var(--accent-2) 15%)}
+.encap-box.l5{border-color:color-mix(in srgb,var(--accent) 70%, var(--accent-2) 30%)}
+.encap-box.l4{border-color:color-mix(in srgb,var(--accent) 50%, var(--accent-2) 50%)}
+.encap-box.l3{border-color:color-mix(in srgb,var(--accent) 30%, var(--accent-2) 70%)}
+.encap-box.l2{border-color:color-mix(in srgb,var(--accent) 15%, var(--accent-2) 85%)}
+.encap-box.l1{border-color:var(--accent-2);color:var(--accent-2)}
+.encap-box.l6,.encap-box.l5,.encap-box.l4,.encap-box.l3,.encap-box.l2{color:var(--fg)}
+.pdu-tag{font-family:'IBM Plex Mono';font-size:13px;color:var(--fg-muted)}
+
+/* ---- osi flip cards ---- */
+.osi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:14px 0}
+.flip{perspective:900px;height:150px}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+.flip.open .flip-inner{transform:rotateY(180deg)}
+.flip-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;border:1px solid var(--border);padding:12px;display:flex;flex-direction:column}
+.flip-face.front{background:var(--surface);align-items:center;justify-content:center;text-align:center;gap:4px}
+.flip-face.front .n{font-family:'IBM Plex Mono';font-size:11px;color:var(--fg-muted)}
+.flip-face.front .t{font-family:'Chakra Petch';font-weight:600;font-size:14.5px}
+.flip-face.back{background:var(--surface-2);transform:rotateY(180deg);font-size:11.5px;overflow-y:auto}
+.flip-face.back b{font-size:12px}
+
+/* ---- flow stepper (tcp/dns/dhcp) ---- */
+.flow-actors{display:flex;justify-content:space-between;gap:8px;margin:10px 0}
+.flow-actor{flex:1;text-align:center;padding:10px 6px;border-radius:10px;border:1px solid var(--border);background:var(--surface);font-size:12px;transition:all .25s}
+.flow-actor .ico{font-size:18px;display:block;margin-bottom:4px}
+.flow-actor.active{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--surface));box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+.flow-msg{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;min-height:70px}
+.flow-msg .m{font-family:'IBM Plex Mono';color:var(--accent);font-size:13.5px;margin-bottom:4px;font-weight:600}
+.flow-ctl{display:flex;align-items:center;gap:10px;margin-top:10px}
+.flow-dots{display:flex;gap:5px;flex:1;justify-content:center}
+.flow-dots span{width:6px;height:6px;border-radius:50%;background:var(--surface-3)}
+.flow-dots span.on{background:var(--accent)}
+
+/* ---- topology svg ---- */
+.topo-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px}
+.topo-box svg{width:100%;height:auto;display:block}
+.topo-node{cursor:pointer;transition:all .25s}
+.topo-node circle{fill:var(--surface-2);stroke:var(--border);stroke-width:2}
+.topo-node text{fill:var(--fg);font-family:'IBM Plex Mono';font-size:10px}
+.topo-node.failed circle{fill:var(--bad);stroke:var(--bad)}
+.topo-node.failed text{fill:#fff}
+.topo-node.cut circle{fill:var(--surface-3);stroke-dasharray:3 3;opacity:.5}
+.topo-edge{stroke:var(--border);stroke-width:2;transition:all .25s}
+.topo-edge.dead{stroke:var(--bad);stroke-dasharray:4 3;opacity:.4}
+.topo-result{margin-top:10px;font-size:13.5px;min-height:20px}
+
+/* ---- hub/switch ---- */
+.hs-box svg{width:100%;height:auto}
+.hs-line{stroke:var(--border);stroke-width:2;transition:stroke .3s,stroke-width .3s}
+.hs-line.on{stroke:var(--accent);stroke-width:3}
+.hs-line.on.bad{stroke:var(--accent-2)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.seg button{padding:7px 14px;background:var(--surface);border:none;color:var(--fg);font:inherit;font-size:13px;cursor:pointer}
+.seg button.on{background:var(--accent);color:var(--accent-ink)}
+
+/* ---- cable widget ---- */
+.pins{display:flex;flex-direction:column;gap:3px}
+.pin{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono';font-size:12px}
+.pin .n{width:16px;color:var(--fg-muted)}
+.pin .sw{width:34px;height:12px;border-radius:3px;flex:none;border:1px solid var(--border)}
+.pin .w{flex:1}
+
+/* ---- search table ---- */
+.search-input{width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--fg);font:inherit;font-size:14px;margin-bottom:10px}
+.search-input:focus{outline:2px solid var(--accent);outline-offset:1px}
+
+/* ---- quiz ---- */
+.quiz{margin-top:14px}
+.quiz-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.quiz-score{font-family:'IBM Plex Mono';font-size:13px;color:var(--fg-muted)}
+.q-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.q-block .q-text{font-weight:600;margin-bottom:10px;font-size:14.5px}
+.q-opts{display:flex;flex-direction:column;gap:7px}
+.q-opt{text-align:left;padding:9px 12px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg);font:inherit;font-size:13.5px;cursor:pointer}
+.q-opt:hover:not(:disabled){border-color:var(--accent)}
+.q-opt:disabled{cursor:default}
+.q-opt.correct{border-color:var(--good);background:color-mix(in srgb,var(--good) 18%,var(--surface-2));color:var(--good);font-weight:600}
+.q-opt.incorrect{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 16%,var(--surface-2));color:var(--bad)}
+.q-explain{margin-top:9px;font-size:13px;color:var(--fg-muted);border-top:1px dashed var(--border);padding-top:8px}
+
+/* ---- dashboard (início) ---- */
+.hero{padding:26px 24px;border-radius:18px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 16%,var(--surface)),var(--surface));border:1px solid var(--border);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,color-mix(in srgb,var(--accent) 7%,transparent) 0 1px,transparent 1px 42px),repeating-linear-gradient(0deg,color-mix(in srgb,var(--accent) 7%,transparent) 0 1px,transparent 1px 42px);pointer-events:none}
+.hero h1{font-size:30px;margin-top:0}
+.progress-bar{height:10px;border-radius:999px;background:var(--surface-3);overflow:hidden;margin:14px 0 6px}
+.progress-bar i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .4s}
+.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:16px}
+.mod-card{border:1px solid var(--border);border-radius:13px;padding:13px 15px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.mod-card:hover{border-color:var(--accent)}
+.mod-card .top{display:flex;justify-content:space-between;align-items:center}
+.mod-card .title{font-weight:600;font-size:13.5px}
+.mod-card .sub{font-size:11.5px;color:var(--fg-muted)}
+
+/* ---- glossary ---- */
+.gloss-item{padding:10px 0;border-bottom:1px solid var(--border)}
+.gloss-item:last-child{border-bottom:none}
+.gloss-item dt{font-family:'IBM Plex Mono';font-weight:600;font-size:13.5px;color:var(--accent)}
+.gloss-item dd{margin:4px 0 0;font-size:13.5px;color:var(--fg-muted)}
+
+/* ---- integrated lab ---- */
+.lab-topo{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px}
+.lab-topo svg{width:100%;height:auto;display:block}
+.lab-node circle,.lab-node rect,.lab-node ellipse{fill:var(--surface-2);stroke-width:2.5}
+.lab-node text{fill:var(--fg);font-family:'IBM Plex Mono';font-size:9.5px}
+.lab-node .ip{fill:var(--fg-muted);font-size:8px}
+.lab-edge{stroke:var(--border);stroke-width:2;transition:stroke .2s,stroke-width .2s}
+.lab-edge.trunk{stroke-dasharray:5 3}
+.lab-edge.active{stroke:var(--accent);stroke-width:3}
+.lab-ticker{margin-top:8px;font-family:'IBM Plex Mono';font-size:12.5px;color:var(--accent);min-height:18px;text-align:center}
+.lab-controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.lab-panels{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+@media (max-width:640px){.lab-panels{grid-template-columns:1fr}}
+.lab-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;min-width:0}
+.lab-panel h4{margin:0 0 6px;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--fg-muted);font-family:'Chakra Petch'}
+.lab-panel table{font-size:11.5px;min-width:0}
+.lab-panel td,.lab-panel th{padding:4px 7px;white-space:nowrap}
+.lab-panel .empty{font-size:12px;color:var(--fg-muted);font-style:italic}
+.lab-log{grid-column:1/-1;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;height:150px;overflow-y:auto;font-family:'IBM Plex Mono';font-size:12px;line-height:1.7}
+.lab-log .ln{opacity:0;animation:login .25s forwards}
+@keyframes login{to{opacity:1}}
+.lab-log .pc{color:var(--accent)}
+.lab-log .sw{color:var(--accent-2)}
+.lab-log .rt{color:var(--good)}
+.lab-log .net{color:var(--lvl-avancado)}
+.lab-log .warn{color:var(--bad)}
+.fw-row-checking td{background:color-mix(in srgb,var(--accent-2) 22%,transparent)}
+.fw-row-allow td{background:color-mix(in srgb,var(--good) 20%,transparent);color:var(--good);font-weight:600}
+.fw-row-block td{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad);font-weight:600}
+
+.mobile-nav-btn{display:none;position:fixed;bottom:18px;right:18px;z-index:50;width:48px;height:48px;border-radius:50%;background:var(--accent);color:var(--accent-ink);border:none;font-size:19px;box-shadow:var(--shadow);cursor:pointer}
+footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--fg-muted);font-size:12px;text-align:center}
+
+@media (max-width:860px){
+  .sidebar{position:fixed;left:0;top:53px;z-index:45;width:84vw;max-width:300px;height:calc(100dvh - 53px);box-shadow:var(--shadow);transform:translateX(-100%);transition:transform .25s}
+  .sidebar.open{transform:translateX(0)}
+  .mobile-nav-btn{display:flex;align-items:center;justify-content:center}
+  .content{padding:20px 14px 90px}
+  .topbar-progress span.lbl-full{display:none}
+}
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><span class="dot"></span>RedeLab</div>
+    <div class="spacer"></div>
+    <div class="topbar-progress">
+      <svg class="ring" viewBox="0 0 36 36"><circle class="bg" cx="18" cy="18" r="15.5"/><circle class="fg" id="ringFg" cx="18" cy="18" r="15.5" stroke-dasharray="0 999"/></svg>
+      <span class="lbl-full" id="progressLbl">0% concluído</span>
+    </div>
+    <button class="iconbtn" id="themeToggle" title="Alternar tema" aria-label="Alternar tema">◐</button>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-search"><input id="navSearch" type="text" placeholder="Buscar módulo…"></div>
+      <div class="navlist" id="navList"></div>
+    </nav>
+
+    <main class="content">
+      <div class="module-inner">
+
+      <!-- ========================= INÍCIO ========================= -->
+      <section class="module" id="mod-inicio">
+        <div class="hero">
+          <div class="eyebrow">Plataforma de estudo · do zero ao avançado</div>
+          <h1>Domine redes de computadores</h1>
+          <p class="lede" style="max-width:56ch">Esta é a continuação natural do seu curso de Fundamentos de Redes: aqui você não só lê — você mexe. Calculadora de sub-redes de verdade, animações de como um pacote é montado e viaja, simuladores de topologia e protocolo, e quizzes para fixar cada módulo.</p>
+          <div class="progress-bar"><i id="heroBar" style="width:0%"></i></div>
+          <div class="actions">
+            <button class="btn primary" id="continueBtn">Continuar estudando →</button>
+            <span class="quiz-score" id="heroStats">0 de 14 módulos concluídos</span>
+          </div>
+        </div>
+
+        <h2>Como usar</h2>
+        <div class="grid3">
+          <div class="card"><h3 style="margin-top:0">1. Leia e interaja</h3><p style="font-size:13.5px;color:var(--fg-muted);margin:0">Cada módulo tem simuladores — clique, digite, arraste os controles. Você aprende fazendo, não só lendo.</p></div>
+          <div class="card"><h3 style="margin-top:0">2. Faça o quiz</h3><p style="font-size:13.5px;color:var(--fg-muted);margin:0">No fim de cada módulo há perguntas com feedback imediato e explicação — erre, entenda o porquê, acerte de novo.</p></div>
+          <div class="card"><h3 style="margin-top:0">3. Marque como concluído</h3><p style="font-size:13.5px;color:var(--fg-muted);margin:0">Seu progresso fica salvo neste navegador. Volte quando quiser e continue de onde parou.</p></div>
+        </div>
+
+        <h2>Trilha de módulos</h2>
+        <div class="mod-grid" id="dashGrid"></div>
+      </section>
+
+      <!-- ===================== 1. INTERNET ===================== -->
+      <section class="module" id="mod-internet" hidden>
+        <div class="eyebrow"><span class="badge basico">Básico</span><span>Módulo 1 · ~10 min</span></div>
+        <h1>Como a Internet funciona</h1>
+        <p class="lede">Antes de qualquer protocolo ou endereço, entenda o quadro geral: a internet é uma rede de redes, conectando milhões de redes menores através de cabos, rádio e satélites, todas conversando com as mesmas regras.</p>
+
+        <h2>Da ARPANET à internet global</h2>
+        <p>Nos anos 1960, a <b>ARPANET</b> (projeto do Departamento de Defesa dos EUA) provou que uma rede podia sobreviver à perda de qualquer nó individual, dividindo mensagens em pacotes que viajam por rotas independentes. Esse princípio — <b>comutação de pacotes</b> — é a base de tudo que veio depois. Quando o conjunto de protocolos <b>TCP/IP</b> se tornou padrão nos anos 1980 e redes acadêmicas e comerciais passaram a se interligar, nasceu a "rede das redes" que chamamos de internet.</p>
+
+        <div class="callout tip"><div class="ic">i</div><div>A internet não tem um "centro". Ela é descentralizada por natureza: cada operadora, universidade ou provedor mantém seu pedaço, e todos concordam em usar os mesmos protocolos para trocar tráfego entre si.</div></div>
+
+        <h2>Como você chega até um site</h2>
+        <p>Clicar em um link dispara uma cadeia de eventos que acontece em milissegundos. Veja o caminho completo, passo a passo:</p>
+        <div class="panel">
+          <div class="flow-actors" id="netFlowActors"></div>
+          <div class="flow-msg" id="netFlowMsg"></div>
+          <div class="flow-ctl">
+            <button class="btn sm" id="netFlowPrev">← Anterior</button>
+            <div class="flow-dots" id="netFlowDots"></div>
+            <button class="btn sm primary" id="netFlowNext">Próximo →</button>
+          </div>
+        </div>
+
+        <h2>Formas de conexão com a internet</h2>
+        <div class="table-wrap"><table>
+          <tr><th>Tecnologia</th><th>Meio</th><th>Característica</th></tr>
+          <tr><td>Linha discada</td><td>Telefone</td><td>Obsoleta; usa modem e a linha fica ocupada</td></tr>
+          <tr><td>ADSL/DSL</td><td>Par de cobre telefônico</td><td>Banda larga sobre a linha telefônica, não ocupa a linha de voz</td></tr>
+          <tr><td>Cabo (DOCSIS)</td><td>Coaxial da TV a cabo</td><td>Compartilhado no bairro, boa velocidade</td></tr>
+          <tr><td>Fibra óptica (FTTH)</td><td>Fibra de vidro</td><td>Maior velocidade e menor latência, imune a interferência eletromagnética</td></tr>
+          <tr><td>Satélite</td><td>Rádio via satélite</td><td>Cobre áreas remotas; latência alta</td></tr>
+          <tr><td>Redes móveis (4G/5G)</td><td>Rádio celular</td><td>Mobilidade; 5G reduz bastante a latência</td></tr>
+        </table></div>
+
+        <h2>Pontos-chave</h2>
+        <ul class="tidy">
+          <li>A internet é uma rede de redes interligadas por protocolos comuns (TCP/IP).</li>
+          <li>Dados trafegam divididos em pacotes, que podem seguir caminhos diferentes até o destino.</li>
+          <li>Entre você e qualquer site existem vários saltos: seu roteador, o provedor (ISP), backbones e os servidores do destino.</li>
+          <li>O meio físico de acesso (fibra, cabo, rádio) afeta diretamente velocidade e latência.</li>
+        </ul>
+
+        <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-internet"></span></div><div id="quiz-internet"></div></div>
+        <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="internet">Marcar módulo como concluído</button></div>
+      </section>
+
+      <!-- ===================== 2. OSI/TCP-IP ===================== -->
+      <section class="module" id="mod-osi" hidden>
+        <div class="eyebrow"><span class="badge basico">Básico</span><span>Módulo 2 · ~15 min</span></div>
+        <h1>Modelo OSI e TCP/IP</h1>
+        <p class="lede">O modelo OSI é o "mapa mental" universal de redes: ele divide tudo que acontece numa comunicação em 7 camadas, cada uma com uma responsabilidade clara. É a referência que todo profissional de redes usa para raciocinar sobre onde um problema está.</p>
+
+        <h2>As 7 camadas (clique para virar o cartão)</h2>
+        <div class="osi-grid" id="osiGrid"></div>
+
+        <h2>OSI x TCP/IP</h2>
+        <p>Na prática, a internet roda sobre o modelo <b>TCP/IP</b>, mais enxuto, com 4 camadas que agrupam as 7 do OSI. O OSI continua sendo a referência didática porque separa melhor os conceitos.</p>
+        <div class="table-wrap"><table>
+          <tr><th>OSI (7 camadas)</th><th>TCP/IP (4 camadas)</th></tr>
+          <tr><td>7 Aplicação, 6 Apresentação, 5 Sessão</td><td>Aplicação</td></tr>
+          <tr><td>4 Transporte</td><td>Transporte</td></tr>
+          <tr><td>3 Rede</td><td>Internet</td></tr>
+          <tr><td>2 Enlace, 1 Física</td><td>Acesso à rede (Enlace/Física)</td></tr>
+        </table></div>
+
+        <h2>Encapsulamento: como um dado vira um sinal elétrico</h2>
+        <p>Quando você envia uma mensagem, cada camada (de cima para baixo) adiciona seu próprio "envelope" (cabeçalho) ao redor dos dados da camada acima — isso é <b>encapsulamento</b>. No destino, o processo é desfeito camada por camada (<b>desencapsulamento</b>). Clique para montar o pacote camada a camada:</p>
+        <div class="panel">
+          <div class="encap-wrap" id="encapWrap"></div>
+          <div class="actions" style="justify-content:center;margin-top:14px">
+            <button class="btn sm" id="encapBack">← Desfazer</button>
+            <span class="pdu-tag" id="encapPdu">Dados (L7 Aplicação)</span>
+            <button class="btn sm primary" id="encapFwd">Encapsular →</button>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--fg-muted)">Nome do PDU (unidade de dados) em cada camada: <b>Dados</b> (Aplicação) → <b>Segmento</b> (Transporte) → <b>Pacote</b> (Rede) → <b>Quadro/Frame</b> (Enlace) → <b>Bits</b> (Física).</p>
+
+        <h2>Pontos-chave</h2>
+        <ul class="tidy">
+          <li>OSI tem 7 camadas; TCP/IP agrupa as mesmas ideias em 4.</li>
+          <li>Cada camada só "conversa" com a camada equivalente do outro lado, usando o cabeçalho que ela mesma adicionou.</li>
+          <li>Diagnosticar problemas de rede é, na prática, descobrir em qual camada algo falhou (cabo rompido = física; sem IP = rede; porta bloqueada = transporte).</li>
+        </ul>
+
+        <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-osi"></span></div><div id="quiz-osi"></div></div>
+        <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="osi">Marcar módulo como concluído</button></div>
+      </section>
+
+      <!-- ===================== 3. IPv4 ===================== -->
+      <section class="module" id="mod-ipv4" hidden>
+        <div class="eyebrow"><span class="badge basico">Básico</span><span>Módulo 3 · ~20 min</span></div>
+        <h1>Endereçamento IPv4</h1>
+        <p class="lede">Todo dispositivo numa rede IP precisa de um endereço único: o <b>IPv4</b>, formado por 32 bits escritos como 4 números de 0 a 255 separados por ponto (ex.: 192.168.1.10). Entender bits, máscara e sub-rede é a habilidade mais valiosa de quem trabalha com redes.</p>
+
+        <h2>Classes de endereço (histórico, ainda cobrado em prova)</h2>
+        <div class="table-wrap"><table>
+          <tr><th>Classe</th><th>1º octeto</th><th>Máscara padrão</th><th>Uso</th></tr>
+          <tr><td>A</td><td>1 – 126</td><td class="mono">255.0.0.0 /8</td><td>Poucas redes, milhões de hosts (grandes corporações)</td></tr>
+          <tr><td>B</td><td>128 – 191</td><td class="mono">255.255.0.0 /16</td><td>Redes médias</td></tr>
+          <tr><td>C</td><td>192 – 223</td><td class="mono">255.255.255.0 /24</td><td>Redes pequenas (mais comum hoje)</td></tr>
+          <tr><td>D</td><td>224 – 239</td><td>—</td><td>Multicast</td></tr>
+          <tr><td>E</td><td>240 – 255</td><td>—</td><td>Experimental/reservado</td></tr>
+        </table></div>
+        <div class="callout warn"><div class="ic">!</div><div><b>127.x.x.x</b> é reservado para <b>loopback</b> (o próprio computador — "localhost"). E hoje o roteamento real usa <b>CIDR</b> (máscaras de tamanho variável), não as classes fixas — elas sobrevivem só como referência didática.</div></div>
+
+        <h2>Público x Privado</h2>
+        <p>Endereços <b>privados</b> (definidos na RFC 1918) não são roteáveis na internet pública — servem para redes internas, e o roteador faz <b>NAT</b> para traduzi-los a um IP público na saída (veja o módulo 10).</p>
+        <div class="table-wrap"><table>
+          <tr><th>Faixa privada</th><th>Classe original</th><th>Hosts possíveis</th></tr>
+          <tr><td class="mono">10.0.0.0 – 10.255.255.255</td><td>A</td><td>~16,7 milhões</td></tr>
+          <tr><td class="mono">172.16.0.0 – 172.31.255.255</td><td>B</td><td>~1 milhão</td></tr>
+          <tr><td class="mono">192.168.0.0 – 192.168.255.255</td><td>C</td><td>65.536 (em sub-redes de 256)</td></tr>
+        </table></div>
+
+        <h2>Simulador: calculadora de sub-rede</h2>
+        <p>Digite um IP e um prefixo CIDR — o cálculo é feito ao vivo, igual uma ferramenta profissional:</p>
+        <div class="panel">
+          <div class="calc-row">
+            <div class="field"><label>Endereço IP</label><input id="subIp" value="192.168.10.130" class="mono"></div>
+            <div class="field small"><label>Prefixo (/CIDR)</label><input id="subCidr" value="26" class="mono"></div>
+            <button class="btn primary" id="subCalc">Calcular</button>
+          </div>
+          <div id="subOut" style="margin-top:16px"></div>
+        </div>
+
+        <h2>Pontos-chave</h2>
+        <ul class="tidy">
+          <li>A máscara de sub-rede separa o IP em "parte de rede" e "parte de host".</li>
+          <li>CIDR (/24, /26, /30…) indica quantos bits, a partir da esquerda, pertencem à rede.</li>
+          <li>Endereço de rede (todos bits de host = 0) e de broadcast (todos = 1) nunca são atribuídos a um host.</li>
+          <li>Quanto maior o CIDR, menor a sub-rede (menos hosts utilizáveis).</li>
+        </ul>
+
+        <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-ipv4"></span></div><div id="quiz-ipv4"></div></div>
+        <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="ipv4">Marcar módulo como concluído</button></div>
+      </section>
+
+      <!-- ===================== 4. IPv6 ===================== -->
+      <section class="module" id="mod-ipv6" hidden>
+        <div class="eyebrow"><span class="badge intermediario">Intermediário</span><span>Módulo 4 · ~10 min</span></div>
+        <h1>IPv6</h1>
+        <p class="lede">O IPv4 tem "apenas" ~4,3 bilhões de endereços — insuficiente para um planeta cheio de celulares, sensores e dispositivos IoT. O <b>IPv6</b> resolve isso com 128 bits, um espaço de endereços astronomicamente maior.</p>
+
+        <h2>Formato</h2>
+        <p>Um endereço IPv6 é escrito em 8 grupos de 4 dígitos hexadecimais, separados por dois-pontos:</p>
+        <div class="card mono" style="text-align:center;font-size:15px">2001:0db8:85a3:0000:0000:8a2e:0370:7334</div>
+        <p>Pode ser abreviado: zeros à esquerda de cada grupo são opcionais, e <b>um único</b> bloco de grupos zerados pode virar <span class="mono">::</span>:</p>
+        <div class="card mono" style="text-align:center;font-size:15px">2001:db8:85a3::8a2e:370:7334</div>
+
+        <h2>IPv4 x IPv6</h2>
+        <div class="table-wrap"><table>
+          <tr><th></th><th>IPv4</th><th>IPv6</th></tr>
+          <tr><td>Tamanho</td><td>32 bits</td><td>128 bits</td></tr>
+          <tr><td>Endereços possíveis</td><td>~4,3 bilhões</td><td>~340 undecilhões</td></tr>
+          <tr><td>Notação</td><td>Decimal com pontos</td><td>Hexadecimal com dois-pontos</td></tr>
+          <tr><td>Broadcast</td><td>Existe</td><td>Não existe (usa multicast)</td></tr>
+          <tr><td>Configuração</td><td>Manual/DHCP</td><td>Autoconfiguração (SLAAC) nativa</td></tr>
+          <tr><td>NAT</td><td>Muito usado (escassez de IPs)</td><td>Desnecessário (endereços sobram)</td></tr>
+        </table></div>
+
+        <h2>Tipos de endereço IPv6</h2>
+        <ul class="tidy">
+          <li><b>Unicast global</b> — roteável na internet, equivalente ao IP público (começa geralmente com 2000::/3).</li>
+          <li><b>Link-local</b> — válido só no enlace local, sempre começa com <span class="mono">fe80::</span>, usado para descoberta de vizinhos.</li>
+          <li><b>Multicast</b> — entrega a um grupo de interfaces, começa com <span class="mono">ff00::/8</span>.</li>
+          <li><b>Unique local</b> — equivalente aos IPs privados do IPv4, faixa <span class="mono">fc00::/7</span>.</li>
+        </ul>
+
+        <div class="callout tip"><div class="ic">i</div><div>Transição: a maioria das redes hoje roda em <b>dual stack</b> (IPv4 e IPv6 simultâneos). Mecanismos como <b>NAT64</b> e túneis permitem que redes só-IPv6 alcancem serviços que só têm IPv4 — veja o módulo 14.</div></div>
+
+        <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-ipv6"></span></div><div id="quiz-ipv6"></div></div>
+        <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="ipv6">Marcar módulo como concluído</button></div>
+      </section>
+
+      <!-- ===================== 5. MAC/Ethernet ===================== -->
+      <section class="module" id="mod-mac" hidden>
+        <div class="eyebrow"><span class="badge basico">Básico</span><span>Módulo 5 · ~10 min</span></div>
+        <h1>Endereço MAC e Ethernet</h1>
+        <p class="lede">Enquanto o IP identifica "em que rede" um dispositivo está, o <b>MAC Address</b> identifica fisicamente a placa de rede — é único no mundo e gravado de fábrica.</p>
+
+        <h2>Estrutura do endereço MAC</h2>
+        <p>48 bits, escritos em 6 pares hexadecimais separados por dois-pontos ou traço:</p>
+        <div class="card" style="text-align:center">
+          <div class="mono" style="font-size:16px">00:1A:2B : 3C:4D:5E</div>
+          <div style="display:flex;justify-content:center;gap:26px;margin-top:8px;font-size:12px;color:var(--fg-muted)">
+            <span><b style="color:var(--accent)">00:1A:2B</b> — OUI (fabricante)</span>
+            <span><b style="color:var(--accent-2)">3C:4D:5E</b> — número de série da placa</span>
+          </div>
+        </div>
+        <p>Os 3 primeiros bytes (<b>OUI</b> — Organizationally Unique Identifier) são registrados pelo IEEE e identificam o fabricante; os 3 últimos são definidos pelo próprio fabricante, garantindo unicidade.</p>
+
+        <h2>MAC x IP</h2>
+        <div class="table-wrap"><table>
+          <tr><th></th><th>MAC Address</th><th>Endereço IP</th></tr>
+          <tr><td>Camada OSI</td><td>2 (Enlace)</td><td>3 (Rede)</td></tr>
+          <tr><td>Atribuição</td><td>Fixo de fábrica (fisico)</td><td>Lógico, pode mudar</td></tr>
+          <tr><td>Alcance</td><td>Só a rede local (enlace)</td><td>Roteável pela internet</td></tr>
+          <tr><td>Analogia</td><td>Seu CPF (fixo, único)</td><td>Seu endereço de casa (pode mudar)</td></tr>
+        </table></div>
+
+        <h2>ARP: a ponte entre IP e MAC</h2>
+        <p>Para enviar um quadro Ethernet, o dispositivo precisa do MAC do destino — mas normalmente só sabe o IP. O protocolo <b>ARP</b> (Address Resolution Protocol) resolve isso: ele envia um <i>broadcast</i> "quem tem o IP X.X.X.X?" na rede local, e o dono responde com seu MAC. Esse resultado fica em cache (tabela ARP) por um tempo.</p>
+
+        <h2>Quadro Ethernet (visão simplificada)</h2>
+        <div class="table-wrap"><table>
+          <tr><th>Preâmbulo</th><th>MAC destino</th><th>MAC origem</th><th>Tipo/Tamanho</th><th>Dados</th><th>FCS (checksum)</th></tr>
+          <tr><td>7 bytes</td><td>6 bytes</td><td>6 bytes</td><td>2 bytes</td><td>46–1500 bytes</td><td>4 bytes</td></tr>
+        </table></div>
+
+        <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-mac"></span></div><div id="quiz-mac"></div></div>
+        <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="mac">Marcar módulo como concluído</button></div>
+      </section>
+
+      <!-- ===================== 6. Topologias ===================== -->
+      <section class="module" id="mod-topologias" hidden>
+        <div class="eyebrow"><span class="badge basico">Básico</span><span>Módulo 6 · ~15 min</span></div>
+        <h1>Tipos de rede e topologias</h1>
+        <p class="lede">"Topologia" é o desenho de como os dispositivos se conectam fisicamente ou logicamente. A escolha afeta custo, desempenho e — o mais importante na prática — o que acontece quando algo falha.</p>
+
+        <h2>Classificação por abrangência</h2>
+        <div class="grid2">
+          <div class="card"><b>PAN</b> — Personal Area Network<p style="font-size:13px;color:var(--fg-muted);margin:4px 0 0">Alcance de poucos metros. Ex.: Bluetooth entre celular e fone.</p></div>
+          <div class="card"><b>LAN</b> — Local Area Network<p style="font-size:13px;color:var(--fg-muted);margin:4px 0 0">Um prédio ou campus. Ex.: a rede da sua casa ou escritório.</p></div>
+          <div class="card"><b>MAN</b> — Metropolitan Area Network<p style="font-size:13px;color:var(--fg-muted);margin:4px 0 0">Uma cidade inteira. Ex.: rede de uma operadora municipal.</p></div>
+          <div class="card"><b>WAN</b> — Wide Area Network<p style="font-size:13px;color:var(--fg-muted);margin:4px 0 0">Países/continentes. Ex.: a própria internet, ou a rede que liga filiais de uma empresa.</p></div>
+        </div>
+
+        <h2>Ponto-a-ponto x Cliente-Servidor</h2>
+        <div class="table-wrap"><table>
+          <tr><th></th><th>Ponto-a-ponto (P2P)</th><th>Cliente-servidor</th></tr>
+          <tr><td>Como funciona</td><td>Todos os nós são iguais, compartilham recursos entre si</td><td>Um servidor central provê serviços; clientes consomem</td></tr>
+          <tr><td>Gerenciamento</td><td>Descentralizado, mais difícil de administrar em escala</td><td>Centralizado, fácil de controlar permissões/backup</td></tr>
+          <tr><td>Exemplo</td><td>Compartilhamento de arquivos entre colegas, torrents</td><td>Acessar um site, e-mail corporativo, Active Directory</td></tr>
+        </table></div>
+
+        <h2>Simulador de topologias</h2>
+        <p>Escolha uma topologia e clique num nó para simular uma falha — veja o que acontece com o resto da rede:</p>
+        <div class="panel">
+          <div class="seg" id="topoSeg"></div>
+          <div class="topo-box" style="margin-top:12px"><svg id="topoSvg" viewBox="0 0 400 220"></svg></div>
+          <div class="topo-result" id="topoResult"></div>
+          <div class="actions" style="margin-top:8px"><button class="btn sm" id="topoReset">↺ Restaurar rede</button></div>
+        </div>
+        <ul class="tidy">
+          <li><b>Estrela</b> — todos ligados a um concentrador central (switch). Se um cabo/dispositivo cai, só ele é afetado; se o concentrador cai, tudo para. É a topologia física mais usada hoje.</li>
+          <li><b>Barramento</b> — todos compartilham um único cabo. Simples e barato, mas uma ruptura no cabo principal derruba a rede inteira; praticamente em desuso.</li>
+          <li><b>Anel</b> — cada nó liga aos dois vizinhos formando um círculo. Um nó com problema pode interromper a volta inteira (em anéis simples, sem redundância).</li>
+          <li><b>Malha (mesh)</b> — cada nó conecta a vários outros. Altíssima resiliência (a internet e redes mesh Wi-Fi usam essa ideia), mas cara e complexa de cabear fisicamente.</li>
+        </ul>
+
+        <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-topologias"></span></div><div id="quiz-topologias"></div></div>
+        <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="topologias">Marcar módulo como concluído</button></div>
+      </section>
+
+      <!-- ===================== 7. Cabeamento ===================== -->
+      <section class="module" id="mod-cabeamento" hidden>
+        <div class="eyebrow"><span class="badge basico">Básico</span><span>Módulo 7 · ~12 min</span></div>
+        <h1>Meios de transmissão e cabeamento</h1>
+        <p class="lede">Os dados viajam como sinais — elétricos, luminosos ou de rádio — por meios guiados (cabos) ou não guiados (ar).</p>
+
+        <h2>Guiados x não guiados</h2>
+        <div class="grid2">
+          <div class="card"><b>Guiados</b><ul class="tidy" style="font-size:13.5px"><li>Par trançado (UTP/STP)</li><li>Cabo coaxial</li><li>Fibra óptica</li></ul></div>
+          <div class="card"><b>Não guiados</b><ul class="tidy" style="font-size:13.5px"><li>Wi-Fi (rádio)</li><li>Bluetooth (rádio)</li><li>Infravermelho</li><li>Satélite / micro-ondas</li></ul></div>
+        </div>
+
+        <h2>Cabo de par trançado: padrões T568A / T568B</h2>
+        <p>É o cabo de rede mais comum (conector RJ-45). A ordem das cores nos 8 pinos segue um padrão para garantir desempenho — veja e compare:</p>
+        <div class="panel">
+          <div class="seg" id="cableSeg"></div>
+          <div class="grid2" style="margin-top:12px">
+            <div><h3 style="margin-top:0">Pinagem</h3><div class="pins" id="cablePins"></div></div>
+            <div>
+              <h3 style="margin-top:0">Quando usar cada um</h3>
+              <ul class="tidy" style="font-size:13px">
+                <li><b>Straight-through</b> (mesmo padrão nas duas pontas): liga dispositivos diferentes — PC ↔ switch, switch ↔ roteador. É o cabo do dia a dia.</li>
+                <li><b>Crossover</b> (T568A numa ponta, T568B na outra): liga dispositivos iguais — PC ↔ PC, switch ↔ switch. Hoje quase todo equipamento tem <i>Auto-MDIX</i> e detecta sozinho, tornando o crossover raramente necessário.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <h2>Comparativo de meios guiados</h2>
+        <div class="table-wrap"><table>
+          <tr><th>Meio</th><th>Velocidade típica</th><th>Alcance</th><th>Imunidade a ruído</th></tr>
+          <tr><td>UTP Cat5e/Cat6</td><td>1–10 Gbps</td><td>100 m</td><td>Baixa/média</td></tr>
+          <tr><td>STP (blindado)</td><td>1–10 Gbps</td><td>100 m</td><td>Melhor que UTP (blindagem)</td></tr>
+          <tr><td>Coaxial</td><td>até ~1 Gbps</td><td>centenas de metros</td><td>Boa</td></tr>
+          <tr><td>Fibra óptica</td><td>até 100+ Gbps</td><td>km (monomodo)</td><td>Imune a interferência eletromagnética</td></tr>
+        </table></div>
+        <div class="callout tip"><div class="ic">i</div><div>UTP = <i>Unshielded</i> Twisted Pair (sem blindagem, o mais comum). STP = <i>Shielded</i> Twisted Pair, usado onde há muita interferência eletromagnética (indústrias, por exemplo).</div></div>
+
+        <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-cabeamento"></span></div><div id="quiz-cabeamento"></div></div>
+        <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="cabeamento">Marcar módulo como concluído</button></div>
+      </section>
+
+      <!-- ===================== 8. Equipamentos ===================== -->
+      <section class="module" id="mod-equipamentos" hidden>
+        <div class="eyebrow"><span class="badge basico">Básico</span><span>Módulo 8 · ~14 min</span></div>
+        <h1>Equipamentos de rede</h1>
+        <p class="lede">Cada equipamento opera numa camada OSI diferente — e isso define exatamente o que ele sabe fazer com o tráfego que passa por ele.</p>
+
+        <div class="table-wrap"><table>
+          <tr><th>Equipamento</th><th>Camada OSI</th><th>Função</th></tr>
+          <tr><td>Repetidor</td><td>1 (Física)</td><td>Regenera o sinal elétrico/óptico para estender o alcance</td></tr>
+          <tr><td>Hub</td><td>1 (Física)</td><td>Repete tudo que recebe para todas as portas (broadcast "burro")</td></tr>
+          <tr><td>Switch</td><td>2 (Enlace)</td><td>Aprende MACs por porta e encaminha o quadro só para o destino certo</td></tr>
+          <tr><td>Access Point (AP)</td><td>1/2</td><td>Ponte entre a rede cabeada e dispositivos Wi-Fi</td></tr>
+          <tr><td>Roteador</td><td>3 (Rede)</td><td>Encaminha pacotes entre redes diferentes, usando o endereço IP</td></tr>
+          <tr><td>Modem</td><td>1 (Física)</td><td>Converte sinal digital ↔ sinal da operadora (ADSL, cabo, fibra)</td></tr>
+          <tr><td>Firewall</td><td>3–7</td><td>Filtra tráfego por regras de segurança</td></tr>
+          <tr><td>Gateway</td><td>Várias</td><td>Ponto de saída de uma rede para outra (ex.: seu roteador é o "gateway padrão")</td></tr>
+        </table></div>
+
+        <h2>Hub x Switch: a diferença que mais cai em prova</h2>
+        <p>Os dois têm várias portas e "parecem" iguais por fora — mas o comportamento interno é radicalmente diferente. Envie um quadro de PC1 para PC2 e veja:</p>
+        <div class="panel">
+          <div class="seg" id="hsSeg"></div>
+          <div class="hs-box" style="margin-top:12px"><svg id="hsSvg" viewBox="0 0 400 220"></svg></div>
+          <div class="actions" style="margin-top:10px"><button class="btn sm primary" id="hsSend">Enviar quadro de PC1 → PC2</button></div>
+          <p id="hsResult" style="font-size:13.5px;margin:10px 0 0;min-height:20px"></p>
+        </div>
+        <ul class="tidy">
+          <li><b>Hub</b>: envia para <i>todas</i> as portas (domínio de colisão único) — ineficiente, inseguro (todo mundo "vê" o tráfego de todo mundo) e hoje praticamente extinto.</li>
+          <li><b>Switch</b>: mantém uma tabela MAC por porta (CAM table) e envia só para o destino certo — cada porta é seu próprio domínio de colisão, muito mais eficiente e seguro.</li>
+        </ul>
+        <div class="callout tip"><div class="ic">i</div><div>Quer ver a tabela MAC de um switch sendo montada em tempo real, dentro de uma rede completa com roteador, DHCP e internet? <button class="btn sm" style="margin-left:4px" onclick="redeLabShowModule('laboratorio')">Abrir Laboratório de Rede →</button></div></div>
+
+        <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-equipamentos"></span></div><div id="quiz-equipamentos"></div></div>
+        <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="equipamentos">Marcar módulo como concluído</button></div>
+      </section>
+
+      <!-- ===================== 9. Protocolos e portas ===================== -->
+      <section class="module" id="mod-protocolos" hidden>
+        <div class="eyebrow"><span class="badge intermediario">Intermediário</span><span>Módulo 9 · ~15 min</span></div>
+        <h1>Protocolos e portas de comunicação</h1>
+        <p class="lede">Uma <b>porta</b> identifica qual aplicação, dentro de um computador com um único IP, deve receber determinado tráfego — de 0 a 65535. As primeiras 1023 são "portas conhecidas" (well-known), reservadas para serviços padrão.</p>
+
+        <h2>TCP x UDP</h2>
+        <div class="table-wrap"><table>
+          <tr><th></th><th class="tag tcp">TCP</th><th class="tag udp">UDP</th></tr>
+          <tr><td>Conexão</td><td>Orientado a conexão (handshake)</td><td>Sem conexão</td></tr>
+          <tr><td>Confiabilidade</td><td>Garante entrega e ordem, reenvia perdidos</td><td>"Melhor esforço", sem garantias</td></tr>
+          <tr><td>Velocidade</td><td>Mais overhead, mais lento</td><td>Leve e rápido</td></tr>
+          <tr><td>Uso típico</td><td>Web, e-mail, transferência de arquivos</td><td>Streaming, VoIP, jogos, DNS</td></tr>
+        </table></div>
+
+        <h2>Simulador: three-way handshake do TCP</h2>
+        <p>Antes de trocar qualquer dado, cliente e servidor TCP precisam "apertar as mãos" em 3 etapas:</p>
+        <div class="panel">
+          <div class="flow-actors" id="tcpFlowActors"></div>
+          <div class="flow-msg" id="tcpFlowMsg"></div>
+          <div class="flow-ctl">
+            <button class="btn sm" id="tcpFlowPrev">← Anterior</button>
+            <div class="flow-dots" id="tcpFlowDots"></div>
+            <button class="btn sm primary" id="tcpFlowNext">Próximo →</button>
+          </div>
+        </div>
+
+        <h2>Tabela de protocolos comuns</h2>
+        <input class="search-input" id="protoSearch" placeholder="Buscar por nome, porta ou descrição…">
+        <div class="table-wrap"><table class="proto"><thead><tr><th>Protocolo</th><th>Porta</th><th>Transporte</th><th>Descrição</th></tr></thead><tbody id="protoBody"></tbody></table></div>
+
+        <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-protocolos"></span></div><div id="quiz-protocolos"></div></div>
+        <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="protocolos">Marcar módulo como concluído</button></div>
+      </section>
+
+      <!-- ===================== 10. DNS/DHCP/NAT ===================== -->
+      <section class="module" id="mod-dns-dhcp-nat" hidden>
+        <div class="eyebrow"><span class="badge intermediario">Intermediário</span><span>Módulo 10 · ~16 min</span></div>
+        <h1>DNS, DHCP e NAT</h1>
+        <p class="lede">Três serviços invisíveis que tornam a internet usável: tradução de nomes, distribuição automática de IPs e compartilhamento de um único IP público entre vários dispositivos.</p>
+
+        <h2>DNS — Sistema de Nomes de Domínio</h2>
+        <p>Computadores se entendem por IP, mas humanos preferem nomes. O DNS é a "agenda telefônica" da internet, organizada hierarquicamente. Veja a resolução de <span class="mono">www.exemplo.com</span> passo a passo:</p>
+        <div class="panel">
+          <div class="flow-actors" id="dnsFlowActors"></div>
+          <div class="flow-msg" id="dnsFlowMsg"></div>
+          <div class="flow-ctl">
+            <button class="btn sm" id="dnsFlowPrev">← Anterior</button>
+            <div class="flow-dots" id="dnsFlowDots"></div>
+            <button class="btn sm primary" id="dnsFlowNext">Próximo →</button>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--fg-muted)">Na prática, o resultado costuma estar em <b>cache</b> no seu próprio computador ou no resolvedor do provedor — então a maioria das consultas nem chega a percorrer a árvore inteira.</p>
+
+        <h2>DHCP — atribuição automática de IP</h2>
+        <p>Sem DHCP, você teria que configurar IP, máscara, gateway e DNS manualmente em cada dispositivo. O processo tem 4 etapas, conhecido pela sigla <b>DORA</b>:</p>
+        <div class="panel">
+          <div class="flow-actors" id="dhcpFlowActors"></div>
+          <div class="flow-msg" id="dhcpFlowMsg"></div>
+          <div class="flow-ctl">
+            <button class="btn sm" id="dhcpFlowPrev">← Anterior</button>
+            <div class="flow-dots" id="dhcpFlowDots"></div>
+            <button class="btn sm primary" id="dhcpFlowNext">Próximo →</button>
+          </div>
+        </div>
+
+        <h2>NAT — Network Address Translation</h2>
+        <p>Como os IPs privados (módulo 3) não são roteáveis na internet, o roteador troca o IP de origem privado pelo seu IP público ao enviar tráfego para fora — e faz o caminho inverso nas respostas.</p>
+        <div class="table-wrap"><table>
+          <tr><th>Tipo</th><th>Como funciona</th></tr>
+          <tr><td>NAT estático</td><td>Um IP privado sempre mapeado para o mesmo IP público (1:1) — comum para expor um servidor</td></tr>
+          <tr><td>NAT dinâmico</td><td>IPs privados usam, por vez, um IP de um pool de IPs públicos disponíveis</td></tr>
+          <tr><td>PAT / NAT overload</td><td>O mais comum em casa: todos os dispositivos compartilham <i>um único</i> IP público, diferenciados pela porta de origem</td></tr>
+        </table></div>
+        <div class="callout tip"><div class="ic">i</div><div>Quer ver o DHCP e a NAT acontecendo passo a passo dentro de uma topologia real, com switch, roteador e internet? <button class="btn sm" style="margin-left:4px" onclick="redeLabShowModule('laboratorio')">Abrir Laboratório de Rede →</button></div></div>
+
+        <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-dns-dhcp-nat"></span></div><div id="quiz-dns-dhcp-nat"></div></div>
+        <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="dns-dhcp-nat">Marcar módulo como concluído</button></div>
+      </section>
+
+      <!-- ===================== 11. Roteamento/Switching avançado ===================== -->
+      <section class="module" id="mod-roteamento" hidden>
+        <div class="eyebrow"><span class="badge avancado">Avançado</span><span>Módulo 11 · ~18 min</span></div>
+        <h1>Roteamento e switching avançado</h1>
+        <p class="lede">Aqui entramos no terreno de quem administra redes de verdade: como pacotes encontram caminho entre redes, e como switches organizam o tráfego dentro de uma mesma rede física.</p>
+
+        <h2>Tabela de roteamento</h2>
+        <p>Todo roteador mantém uma tabela decidindo, para cada rede de destino, por qual interface/próximo salto enviar o pacote. Quando nenhuma rota específica combina, usa a <b>rota padrão</b> (0.0.0.0/0 — "para qualquer lugar que eu não conheça, manda pro meu provedor").</p>
+
+        <h2>Roteamento estático x dinâmico</h2>
+        <div class="grid2">
+          <div class="card"><b>Estático</b><p style="font-size:13px;color:var(--fg-muted)">O administrador cadastra as rotas manualmente. Simples e previsível, mas não se adapta sozinho a mudanças/falhas. Bom para redes pequenas.</p></div>
+          <div class="card"><b>Dinâmico</b><p style="font-size:13px;color:var(--fg-muted)">Roteadores trocam informações entre si via protocolos de roteamento e recalculam caminhos automaticamente. Essencial em redes grandes.</p></div>
+        </div>
+
+        <h2>Protocolos de roteamento dinâmico</h2>
+        <div class="table-wrap"><table>
+          <tr><th>Protocolo</th><th>Tipo</th><th>Métrica</th><th>Uso típico</th></tr>
+          <tr><td>RIP</td><td>Vetor de distância</td><td>Número de saltos (máx. 15)</td><td>Redes pequenas/didáticas</td></tr>
+          <tr><td>OSPF</td><td>Estado de enlace</td><td>Custo (baseado na banda)</td><td>Redes corporativas grandes</td></tr>
+          <tr><td>EIGRP</td><td>Híbrido (Cisco)</td><td>Banda, atraso, confiabilidade</td><td>Redes Cisco corporativas</td></tr>
+          <tr><td>BGP</td><td>Vetor de caminho</td><td>Atributos de política/AS-path</td><td>Roteamento entre provedores — "o protocolo que roda a internet"</td></tr>
+        </table></div>
+
+        <h2>VLAN — segmentando uma rede física em várias lógicas</h2>
+        <p>Uma <b>VLAN</b> (Virtual LAN, 802.1Q) divide um switch físico em redes separadas logicamente — dispositivos em VLANs diferentes não se enxergam diretamente, mesmo plugados no mesmo switch, a menos que um roteador (ou switch de camada 3) faça a ponte entre elas. Isso melhora segurança e organização (ex.: VLAN de RH separada da VLAN de visitantes).</p>
+        <div class="panel">
+          <p style="margin-top:0">Simule: atribua as portas a VLANs e veja quem consegue conversar com quem.</p>
+          <div class="grid2" id="vlanPorts"></div>
+          <p id="vlanResult" style="font-size:13.5px;margin-top:10px"></p>
+        </div>
+        <ul class="tidy">
+          <li><b>Porta de acesso (access)</b>: pertence a uma única VLAN — é onde ligam PCs e impressoras.</li>
+          <li><b>Porta tronco (trunk)</b>: carrega tráfego de várias VLANs ao mesmo tempo (usando tags 802.1Q) — liga switches entre si.</li>
+        </ul>
+        <div class="callout tip"><div class="ic">i</div><div>Quer ver na prática por que PCs em VLANs diferentes não se enxergam — e como o roteador resolve isso? <button class="btn sm" style="margin-left:4px" onclick="redeLabShowModule('laboratorio')">Abrir Laboratório de Rede →</button></div></div>
+
+        <h2>STP — evitando loops</h2>
+        <p>Cabear switches redundantes (para ter backup) cria <b>loops</b>, que fazem quadros circularem infinitamente e derrubam a rede (tempestade de broadcast). O <b>Spanning Tree Protocol</b> calcula automaticamente uma árvore sem loops, colocando portas redundantes em modo <i>blocking</i> até serem necessárias.</p>
+
+        <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-roteamento"></span></div><div id="quiz-roteamento"></div></div>
+        <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="roteamento">Marcar módulo como concluído</button></div>
+      </section>
+
+      <!-- ===================== 12. Laboratório integrado ===================== -->
+      <section class="module" id="mod-laboratorio" hidden>
+        <div class="eyebrow"><span class="badge avancado">Avançado</span><span>Módulo 12 · ~20 min</span></div>
+        <h1>Laboratório de rede integrado</h1>
+        <p class="lede">Chegou a hora de ver tudo funcionando junto. Esta é uma rede pequena, só que real: dois computadores na VLAN 10, um na VLAN 20, um switch, um roteador que também faz DHCP e NAT, e a internet do outro lado. Escolha uma etapa abaixo e acompanhe cada pacote se movendo de verdade — com log técnico e as tabelas MAC, ARP, NAT e DHCP sendo preenchidas ao vivo.</p>
+
+        <div class="lab-topo"><svg id="labSvg" viewBox="0 0 720 300"></svg></div>
+        <div class="lab-ticker" id="labTicker">Pronto. Escolha uma etapa abaixo para começar.</div>
+
+        <div class="lab-controls">
+          <button class="btn sm lab-btn" data-sc="dhcp">① PC-A entra na rede (DHCP)</button>
+          <button class="btn sm lab-btn" data-sc="arp">② PC-A resolve o gateway (ARP)</button>
+          <button class="btn sm lab-btn" data-sc="internet">③ PC-A acessa a internet (NAT + TCP)</button>
+          <button class="btn sm lab-btn" data-sc="samevlan">④ PC-A fala com PC-B (mesma VLAN)</button>
+          <button class="btn sm lab-btn" data-sc="diffvlan">⑤ PC-A tenta falar com PC-C (VLANs diferentes)</button>
+          <button class="btn sm lab-btn" data-sc="intervlan">⑥ Roteamento entre VLANs (via roteador)</button>
+          <button class="btn sm" id="labReset">↺ Reiniciar laboratório</button>
+        </div>
+
+        <div class="lab-panels">
+          <div class="lab-panel"><h4>Tabela MAC — Switch</h4><div id="labMacTable"><span class="empty">vazia</span></div></div>
+          <div class="lab-panel"><h4>Cache ARP — PC-A</h4><div id="labArpTable"><span class="empty">vazio</span></div></div>
+          <div class="lab-panel"><h4>Tabela NAT — Roteador</h4><div id="labNatTable"><span class="empty">vazia</span></div></div>
+          <div class="lab-panel"><h4>Concessões DHCP — Roteador</h4><div id="labDhcpTable"><span class="empty">nenhuma</span></div></div>
+          <div class="lab-panel lab-log" id="labLog"></div>
+        </div>
+
+        <h2>O que acabou de acontecer, resumido</h2>
+        <ul class="tidy">
+          <li><b>DHCP</b> deu a PC-A um endereço automaticamente, sem configuração manual.</li>
+          <li><b>ARP</b> traduziu o IP do gateway para o MAC que o switch realmente usa para encaminhar quadros.</li>
+          <li><b>NAT (PAT)</b> trocou o IP privado de PC-A pelo IP público do roteador para a conversa sair à internet — e desfez a troca na volta.</li>
+          <li>Dentro da <b>mesma VLAN</b>, o switch encaminha direto pela tabela MAC, sem precisar do roteador.</li>
+          <li>Entre <b>VLANs diferentes</b>, o switch nunca encaminha sozinho — é sempre o roteador (aqui, via sub-interfaces 802.1Q) que faz a ponte.</li>
+        </ul>
+
+        <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-laboratorio"></span></div><div id="quiz-laboratorio"></div></div>
+        <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="laboratorio">Marcar módulo como concluído</button></div>
+      </section>
+
+      <!-- ===================== 13. Segurança ===================== -->
+      <section class="module" id="mod-seguranca" hidden>
+        <div class="eyebrow"><span class="badge avancado">Avançado</span><span>Módulo 13 · ~16 min</span></div>
+        <h1>Segurança de redes</h1>
+        <p class="lede">Conectividade sem segurança é um convite. Esta seção cobre as defesas essenciais e os ataques mais comuns que elas combatem.</p>
+
+        <h2>Firewall</h2>
+        <div class="table-wrap"><table>
+          <tr><th>Tipo</th><th>Como decide</th></tr>
+          <tr><td>Filtro de pacotes (stateless)</td><td>Olha cada pacote isoladamente: IP/porta de origem e destino</td></tr>
+          <tr><td>Stateful</td><td>Acompanha o estado da conexão inteira (ex.: só permite resposta a uma conexão que você iniciou)</td></tr>
+          <tr><td>Next-Gen (NGFW)</td><td>Inspeciona até a camada de aplicação (7): reconhece aplicativos, não só portas</td></tr>
+        </table></div>
+
+        <h2>Simulador: como um firewall decide, regra por regra</h2>
+        <p>Firewalls avaliam a lista de regras (ACL) <b>em ordem</b>, de cima para baixo — a <b>primeira</b> que combinar decide o destino do pacote, e as seguintes nem chegam a ser olhadas. Teste pacotes diferentes contra esta lista e veja qual regra pega cada um:</p>
+        <div class="panel">
+          <div class="table-wrap"><table id="fwTable">
+            <tr><th>#</th><th>Ação</th><th>Protocolo</th><th>Porta</th></tr>
+            <tr id="fwRule-0"><td>1</td><td>✓ Permitir</td><td>TCP</td><td>443 (HTTPS)</td></tr>
+            <tr id="fwRule-1"><td>2</td><td>✓ Permitir</td><td>TCP</td><td>80 (HTTP)</td></tr>
+            <tr id="fwRule-2"><td>3</td><td>✓ Permitir</td><td>UDP</td><td>53 (DNS)</td></tr>
+            <tr id="fwRule-3"><td>4</td><td>✕ Bloquear</td><td>TCP</td><td>23 (Telnet)</td></tr>
+            <tr id="fwRule-4"><td>5</td><td>✕ Bloquear</td><td>TCP</td><td>3389 (RDP)</td></tr>
+            <tr id="fwRule-implicit"><td>—</td><td>✕ Bloquear (implícita)</td><td>qualquer</td><td>qualquer</td></tr>
+          </table></div>
+          <div class="actions" style="margin-top:10px;flex-wrap:wrap">
+            <button class="btn sm fw-btn" data-proto="TCP" data-port="443">Testar TCP/443</button>
+            <button class="btn sm fw-btn" data-proto="TCP" data-port="80">Testar TCP/80</button>
+            <button class="btn sm fw-btn" data-proto="UDP" data-port="53">Testar UDP/53</button>
+            <button class="btn sm fw-btn" data-proto="TCP" data-port="23">Testar TCP/23</button>
+            <button class="btn sm fw-btn" data-proto="TCP" data-port="3389">Testar TCP/3389</button>
+            <button class="btn sm fw-btn" data-proto="TCP" data-port="8080">Testar TCP/8080 (não listada)</button>
+          </div>
+          <p id="fwResult" style="font-size:13.5px;margin-top:12px;min-height:20px"></p>
+        </div>
+
+        <h2>VPN — Rede Privada Virtual</h2>
+        <p>Cria um "túnel" criptografado sobre uma rede pública (como a internet), fazendo o tráfego parecer que trafega numa rede privada. Protege confidencialidade mesmo em redes não confiáveis (Wi-Fi público, por exemplo).</p>
+        <div class="grid2">
+          <div class="card"><b>Site-to-site</b><p style="font-size:13px;color:var(--fg-muted)">Liga redes inteiras (ex.: matriz ↔ filial) de forma permanente.</p></div>
+          <div class="card"><b>Cliente (acesso remoto)</b><p style="font-size:13px;color:var(--fg-muted)">Um usuário individual se conecta à rede corporativa de fora.</p></div>
+        </div>
+        <div class="grid2" style="margin-top:12px">
+          <div class="card" style="border-color:var(--bad)">
+            <b style="color:var(--bad)">Sem VPN, em Wi-Fi público</b>
+            <p style="font-size:12.5px;color:var(--fg-muted);margin:6px 0">Qualquer pessoa na mesma rede pode capturar o tráfego não criptografado.</p>
+            <div class="mono" style="background:var(--surface-2);border-radius:8px;padding:8px 10px;font-size:12px">usuario=joao&senha=123456</div>
+          </div>
+          <div class="card" style="border-color:var(--good)">
+            <b style="color:var(--good)">Com VPN</b>
+            <p style="font-size:12.5px;color:var(--fg-muted);margin:6px 0">O túnel criptografado transforma os dados em algo ilegível para quem intercepta.</p>
+            <div class="mono" style="background:var(--surface-2);border-radius:8px;padding:8px 10px;font-size:12px">8f2$kQ#mN1@xP9!vL…</div>
+          </div>
+        </div>
+
+        <h2>IDS x IPS</h2>
+        <ul class="tidy">
+          <li><b>IDS</b> (Intrusion Detection System) — monitora e <i>alerta</i> sobre atividade suspeita, não bloqueia.</li>
+          <li><b>IPS</b> (Intrusion Prevention System) — monitora e <i>bloqueia</i> ativamente a ameaça em tempo real.</li>
+        </ul>
+
+        <h2>Ataques comuns</h2>
+        <div class="table-wrap"><table>
+          <tr><th>Ataque</th><th>O que faz</th></tr>
+          <tr><td>ARP spoofing</td><td>Envia respostas ARP falsas para se passar pelo gateway e interceptar tráfego (tipo de MITM)</td></tr>
+          <tr><td>Man-in-the-middle (MITM)</td><td>Intercepta a comunicação entre duas partes sem que elas percebam</td></tr>
+          <tr><td>DDoS</td><td>Satura um alvo com tráfego de múltiplas origens, tirando o serviço do ar</td></tr>
+          <tr><td>Port scanning</td><td>Varre portas abertas para mapear serviços vulneráveis</td></tr>
+          <tr><td>Phishing</td><td>Engana o usuário para roubar credenciais, geralmente fora da camada técnica</td></tr>
+          <tr><td>DNS spoofing</td><td>Corrompe respostas DNS para redirecionar vítimas a sites falsos</td></tr>
+        </table></div>
+
+        <h2>Simulador: ataque Man-in-the-Middle via ARP spoofing</h2>
+        <p>Veja a diferença entre uma rede normal e uma onde um atacante envenena o cache ARP da vítima para se colocar no meio da comunicação:</p>
+        <div class="panel">
+          <div class="lab-topo"><svg id="mitmSvg" viewBox="0 0 480 220"></svg></div>
+          <div class="lab-ticker" id="mitmTicker">Escolha um cenário abaixo.</div>
+          <div class="actions" style="margin-top:10px;flex-wrap:wrap">
+            <button class="btn sm mitm-btn" id="mitmNormal">▶ Rede normal (sem ataque)</button>
+            <button class="btn sm mitm-btn" id="mitmAttack">▶ Simular ARP spoofing (MITM)</button>
+          </div>
+          <div class="lab-panel lab-log" id="mitmLog" style="margin-top:10px;height:120px"></div>
+        </div>
+
+        <h2>Boas práticas essenciais</h2>
+        <ul class="tidy">
+          <li>Segmentação de rede (VLANs, zonas de firewall) — limita o alcance de uma invasão.</li>
+          <li>Princípio do menor privilégio — cada usuário/sistema só acessa o estritamente necessário.</li>
+          <li>Autenticação multifator (MFA) em todo acesso sensível.</li>
+          <li>Atualização e patching constante de equipamentos e sistemas.</li>
+          <li><b>Zero Trust</b> — não confiar implicitamente em nada, nem dentro do perímetro da rede; verificar sempre.</li>
+        </ul>
+
+        <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-seguranca"></span></div><div id="quiz-seguranca"></div></div>
+        <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="seguranca">Marcar módulo como concluído</button></div>
+      </section>
+
+      <!-- ===================== 13. Wireless ===================== -->
+      <section class="module" id="mod-wireless" hidden>
+        <div class="eyebrow"><span class="badge intermediario">Intermediário</span><span>Módulo 14 · ~12 min</span></div>
+        <h1>Redes sem fio</h1>
+        <p class="lede">Wi-Fi é a família de padrões <b>IEEE 802.11</b>. Entender as gerações e as frequências ajuda a diagnosticar lentidão e interferência.</p>
+
+        <h2>Gerações do Wi-Fi</h2>
+        <div class="table-wrap"><table>
+          <tr><th>Padrão</th><th>Nome comercial</th><th>Frequência</th><th>Velocidade máx. teórica</th></tr>
+          <tr><td>802.11b</td><td>—</td><td>2,4 GHz</td><td>11 Mbps</td></tr>
+          <tr><td>802.11g</td><td>—</td><td>2,4 GHz</td><td>54 Mbps</td></tr>
+          <tr><td>802.11n</td><td>Wi-Fi 4</td><td>2,4 / 5 GHz</td><td>600 Mbps</td></tr>
+          <tr><td>802.11ac</td><td>Wi-Fi 5</td><td>5 GHz</td><td>~3,5 Gbps</td></tr>
+          <tr><td>802.11ax</td><td>Wi-Fi 6 / 6E</td><td>2,4 / 5 / 6 GHz</td><td>~9,6 Gbps</td></tr>
+          <tr><td>802.11be</td><td>Wi-Fi 7</td><td>2,4 / 5 / 6 GHz</td><td>~46 Gbps</td></tr>
+        </table></div>
+
+        <h2>2,4 GHz x 5 GHz x 6 GHz</h2>
+        <div class="table-wrap"><table>
+          <tr><th></th><th>Alcance</th><th>Velocidade</th><th>Interferência</th></tr>
+          <tr><td>2,4 GHz</td><td>Maior (atravessa paredes melhor)</td><td>Menor</td><td>Alta (Bluetooth, micro-ondas, muitos vizinhos)</td></tr>
+          <tr><td>5 GHz</td><td>Menor</td><td>Maior</td><td>Mais canais, menos disputa</td></tr>
+          <tr><td>6 GHz (Wi-Fi 6E/7)</td><td>Menor ainda</td><td>Maior ainda</td><td>Espectro quase vazio hoje</td></tr>
+        </table></div>
+        <div class="callout tip"><div class="ic">i</div><div>Em 2,4 GHz, só os canais <b>1, 6 e 11</b> não se sobrepõem entre si — usar outros canais nessa faixa causa interferência entre redes vizinhas.</div></div>
+
+        <h2>Simulador: por que só os canais 1, 6 e 11 não se sobrepõem</h2>
+        <p>Cada canal Wi-Fi em 2,4GHz ocupa uma faixa de espectro bem mais larga do que o espaçamento entre os números de canal — por isso redes vizinhas em canais próximos interferem entre si. Escolha o canal de 3 roteadores próximos e veja onde aparece sobreposição:</p>
+        <div class="panel">
+          <div class="actions" style="flex-wrap:wrap;gap:18px" id="chanControls"></div>
+          <div id="chanStrip" style="margin-top:16px"></div>
+          <p id="chanResult" style="font-size:13.5px;margin-top:12px"></p>
+        </div>
+
+        <h2>Evolução da segurança Wi-Fi</h2>
+        <div class="table-wrap"><table>
+          <tr><th>Protocolo</th><th>Situação</th></tr>
+          <tr><td>WEP</td><td>Quebrado há mais de uma década — nunca use</td></tr>
+          <tr><td>WPA</td><td>Melhoria temporária sobre o WEP, também obsoleto</td></tr>
+          <tr><td>WPA2 (PSK/Enterprise)</td><td>Padrão por muitos anos; ainda amplamente usado</td></tr>
+          <tr><td>WPA3</td><td>Atual — criptografia mais forte, resistente a ataques de força bruta offline</td></tr>
+        </table></div>
+
+        <h2>Simulador: como um dispositivo se conecta a uma rede Wi-Fi</h2>
+        <p>Da descoberta da rede até o tráfego criptografado fluindo, a associação passa por várias etapas — inclusive uma troca de chaves em que a senha em si nunca viaja pelo ar:</p>
+        <div class="panel">
+          <div class="flow-actors" id="wifiFlowActors"></div>
+          <div class="flow-msg" id="wifiFlowMsg"></div>
+          <div class="flow-ctl">
+            <button class="btn sm" id="wifiFlowPrev">← Anterior</button>
+            <div class="flow-dots" id="wifiFlowDots"></div>
+            <button class="btn sm primary" id="wifiFlowNext">Próximo →</button>
+          </div>
+        </div>
+
+        <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-wireless"></span></div><div id="quiz-wireless"></div></div>
+        <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="wireless">Marcar módulo como concluído</button></div>
+      </section>
+
+      <!-- ===================== 14. Avançado ===================== -->
+      <section class="module" id="mod-avancado" hidden>
+        <div class="eyebrow"><span class="badge avancado">Avançado</span><span>Módulo 15 · ~16 min</span></div>
+        <h1>Tópicos avançados</h1>
+        <p class="lede">O estado da arte e as ferramentas que todo profissional usa no dia a dia para diagnosticar redes.</p>
+
+        <h2>QoS — Qualidade de Serviço</h2>
+        <p>Nem todo tráfego é igual: uma chamada de vídeo não tolera atraso, mas um download de arquivo pode esperar. <b>QoS</b> prioriza pacotes sensíveis a latência (marcados com <b>DSCP</b>) para que cheguem antes em momentos de congestionamento.</p>
+
+        <h2>SDN — Software-Defined Networking</h2>
+        <p>Redes tradicionais têm o "plano de controle" (decide rotas) e o "plano de dados" (encaminha pacotes) dentro de cada equipamento. SDN separa os dois: um controlador central e programável decide as regras, e os switches/roteadores só executam — como trocar cada semáforo de uma cidade por um painel único que os controla todos.</p>
+
+        <h2>Redes em nuvem (visão geral)</h2>
+        <p>Provedores de nuvem (AWS, Azure, GCP) recriam os mesmos conceitos deste curso em software: uma <b>VPC</b> (Virtual Private Cloud) é essencialmente uma rede privada com sub-redes (o mesmo CIDR que você calculou no módulo 3), tabelas de rotas e "security groups" que funcionam como firewalls por instância.</p>
+
+        <h2>Caixa de ferramentas: diagnóstico de rede</h2>
+        <div class="table-wrap"><table>
+          <tr><th>Comando</th><th>Para que serve</th></tr>
+          <tr><td class="mono">ping</td><td>Testa se um host responde e mede a latência (RTT)</td></tr>
+          <tr><td class="mono">tracert / traceroute</td><td>Mostra cada salto (roteador) até o destino</td></tr>
+          <tr><td class="mono">ipconfig / ifconfig</td><td>Mostra a configuração IP da sua própria interface</td></tr>
+          <tr><td class="mono">nslookup / dig</td><td>Consulta registros DNS manualmente</td></tr>
+          <tr><td class="mono">netstat</td><td>Lista conexões e portas ativas na máquina</td></tr>
+          <tr><td class="mono">arp -a</td><td>Mostra a tabela ARP (IP ↔ MAC) em cache</td></tr>
+        </table></div>
+
+        <h2>Transição IPv6</h2>
+        <ul class="tidy">
+          <li><b>Dual stack</b> — a interface roda IPv4 e IPv6 ao mesmo tempo (abordagem mais comum hoje).</li>
+          <li><b>Tunelamento</b> — encapsula pacotes IPv6 dentro de IPv4 para atravessar trechos que só suportam IPv4.</li>
+          <li><b>NAT64/DNS64</b> — permite que clientes só-IPv6 alcancem servidores só-IPv4.</li>
+        </ul>
+
+        <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-avancado"></span></div><div id="quiz-avancado"></div></div>
+        <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="avancado">Marcar módulo como concluído</button></div>
+      </section>
+
+      <!-- ===================== Glossário ===================== -->
+      <section class="module" id="mod-glossario" hidden>
+        <div class="eyebrow"><span>Referência rápida</span></div>
+        <h1>Glossário</h1>
+        <p class="lede">Mais de 40 termos essenciais, num só lugar para consulta rápida.</p>
+        <input class="search-input" id="glossSearch" placeholder="Buscar termo…">
+        <dl id="glossList"></dl>
+      </section>
+
+      <footer class="credit">RedeLab · material de estudo complementar ao seu curso de Fundamentos de Redes · progresso salvo localmente neste navegador</footer>
+      </div>
+    </main>
+  </div>
+  <button class="mobile-nav-btn" id="mobileNavBtn" aria-label="Abrir menu">☰</button>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================ DATA ============================ */
+var MODULES = [
+  {id:"inicio", num:"•", title:"Início", level:"guia"},
+  {id:"internet", num:1, title:"Como a Internet Funciona", level:"basico"},
+  {id:"osi", num:2, title:"Modelo OSI e TCP/IP", level:"basico"},
+  {id:"ipv4", num:3, title:"Endereçamento IPv4", level:"basico"},
+  {id:"ipv6", num:4, title:"IPv6", level:"intermediario"},
+  {id:"mac", num:5, title:"MAC e Ethernet", level:"basico"},
+  {id:"topologias", num:6, title:"Redes e Topologias", level:"basico"},
+  {id:"cabeamento", num:7, title:"Meios de Transmissão", level:"basico"},
+  {id:"equipamentos", num:8, title:"Equipamentos de Rede", level:"basico"},
+  {id:"protocolos", num:9, title:"Protocolos e Portas", level:"intermediario"},
+  {id:"dns-dhcp-nat", num:10, title:"DNS, DHCP e NAT", level:"intermediario"},
+  {id:"roteamento", num:11, title:"Roteamento e Switching", level:"avancado"},
+  {id:"laboratorio", num:12, title:"Laboratório de Rede Integrado", level:"avancado"},
+  {id:"seguranca", num:13, title:"Segurança de Redes", level:"avancado"},
+  {id:"wireless", num:14, title:"Redes Sem Fio", level:"intermediario"},
+  {id:"avancado", num:15, title:"Tópicos Avançados", level:"avancado"},
+  {id:"glossario", num:"•", title:"Glossário", level:"guia"}
+];
+var LEVEL_LABEL = {basico:"Básico", intermediario:"Intermediário", avancado:"Avançado", guia:"Guia"};
+var TRACKED = MODULES.filter(function(m){return m.id!=="inicio" && m.id!=="glossario";});
+
+/* ============================ STORAGE ============================ */
+function loadProgress(){ try{ return JSON.parse(localStorage.getItem("redelab_progress")||"{}"); }catch(e){ return {}; } }
+function saveProgress(p){ try{ localStorage.setItem("redelab_progress", JSON.stringify(p)); }catch(e){} }
+var progress = loadProgress();
+
+function loadTheme(){ try{ return localStorage.getItem("redelab_theme")||""; }catch(e){ return ""; } }
+function saveTheme(t){ try{ localStorage.setItem("redelab_theme", t); }catch(e){} }
+
+/* ============================ NAV / ROUTING ============================ */
+var navList = document.getElementById("navList");
+var groups = {basico:[], intermediario:[], avancado:[], guia:[]};
+MODULES.forEach(function(m){ groups[m.level].push(m); });
+var order = ["guia","basico","intermediario","avancado"];
+var navHtml = "";
+order.forEach(function(lvl){
+  if(!groups[lvl].length) return;
+  navHtml += '<div class="nav-group-label">'+LEVEL_LABEL[lvl]+'</div>';
+  groups[lvl].forEach(function(m){
+    navHtml += '<button class="nav-item" data-id="'+m.id+'" style="--lvl:var(--lvl-'+lvl+')">'+
+      '<span class="num">'+m.num+'</span><span class="lbl">'+m.title+'</span><span class="check">✓</span></button>';
+  });
+});
+navList.innerHTML = navHtml;
+
+function showModule(id){
+  var found = false;
+  document.querySelectorAll(".module").forEach(function(sec){
+    var match = sec.id === "mod-"+id;
+    sec.hidden = !match;
+    if(match) found = true;
+  });
+  if(!found) return showModule("inicio");
+  document.querySelectorAll(".nav-item").forEach(function(b){ b.classList.toggle("active", b.dataset.id===id); });
+  try{ history.replaceState(null,"","#"+id); }catch(e){}
+  document.querySelector(".content").scrollTop = 0;
+  window.scrollTo(0,0);
+  closeMobileNav();
+}
+window.redeLabShowModule = showModule;
+navList.addEventListener("click", function(e){
+  var btn = e.target.closest(".nav-item");
+  if(btn) showModule(btn.dataset.id);
+});
+document.getElementById("navSearch").addEventListener("input", function(e){
+  var q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll(".nav-item").forEach(function(b){
+    b.style.display = b.querySelector(".lbl").textContent.toLowerCase().indexOf(q)>-1 ? "" : "none";
+  });
+});
+
+function closeMobileNav(){ document.getElementById("sidebar").classList.remove("open"); }
+document.getElementById("mobileNavBtn").addEventListener("click", function(){ document.getElementById("sidebar").classList.toggle("open"); });
+
+/* ============================ THEME ============================ */
+var savedTheme = loadTheme();
+if(savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+document.getElementById("themeToggle").addEventListener("click", function(){
+  var cur = document.documentElement.getAttribute("data-theme");
+  var sysDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  var effectiveDark = cur ? cur==="dark" : sysDark;
+  var next = effectiveDark ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  saveTheme(next);
+});
+
+/* ============================ PROGRESS UI ============================ */
+function updateProgressUI(){
+  var done = 0;
+  TRACKED.forEach(function(m){ if(progress[m.id] && progress[m.id].done) done++; });
+  var pct = Math.round((done/TRACKED.length)*100);
+  document.querySelectorAll(".nav-item").forEach(function(b){
+    var id = b.dataset.id;
+    b.classList.toggle("done", !!(progress[id] && progress[id].done));
+  });
+  document.getElementById("progressLbl").textContent = pct+"% concluído";
+  var ring = document.getElementById("ringFg");
+  var circumference = 2*Math.PI*15.5;
+  ring.setAttribute("stroke-dasharray", (circumference*pct/100).toFixed(1)+" 999");
+  var heroBar = document.getElementById("heroBar"); if(heroBar) heroBar.style.width = pct+"%";
+  var heroStats = document.getElementById("heroStats"); if(heroStats) heroStats.textContent = done+" de "+TRACKED.length+" módulos concluídos";
+  renderDashboard();
+  document.querySelectorAll(".done-btn").forEach(function(btn){
+    var id = btn.dataset.mod;
+    var isDone = !!(progress[id] && progress[id].done);
+    btn.textContent = isDone ? "✓ Módulo concluído" : "Marcar módulo como concluído";
+    btn.classList.toggle("primary", !isDone);
+  });
+}
+document.querySelectorAll(".done-btn").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    var id = btn.dataset.mod;
+    progress[id] = progress[id] || {};
+    progress[id].done = !progress[id].done;
+    saveProgress(progress);
+    updateProgressUI();
+  });
+});
+
+function renderDashboard(){
+  var grid = document.getElementById("dashGrid");
+  if(!grid) return;
+  var html = "";
+  TRACKED.forEach(function(m){
+    var isDone = !!(progress[m.id] && progress[m.id].done);
+    var q = progress[m.id] && progress[m.id].quiz;
+    html += '<div class="mod-card" data-id="'+m.id+'" style="border-left:3px solid var(--lvl-'+m.level+')">'+
+      '<div class="top"><span class="title">'+m.num+'. '+m.title+'</span>'+(isDone?'<span class="check" style="background:var(--good);border-color:var(--good);color:var(--surface);width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">✓</span>':'')+'</div>'+
+      '<span class="sub">'+LEVEL_LABEL[m.level]+(q?" · quiz "+q.score+"/"+q.total:"")+'</span></div>';
+  });
+  grid.innerHTML = html;
+  grid.querySelectorAll(".mod-card").forEach(function(c){ c.addEventListener("click", function(){ showModule(c.dataset.id); }); });
+}
+document.getElementById("continueBtn").addEventListener("click", function(){
+  var next = TRACKED.find(function(m){ return !(progress[m.id] && progress[m.id].done); });
+  showModule(next ? next.id : "internet");
+});
+
+/* ============================ GENERIC FLOW STEPPER ============================ */
+function initFlow(prefix, actors, steps){
+  var actorsEl = document.getElementById(prefix+"Actors");
+  var msgEl = document.getElementById(prefix+"Msg");
+  var dotsEl = document.getElementById(prefix+"Dots");
+  var prevBtn = document.getElementById(prefix+"Prev");
+  var nextBtn = document.getElementById(prefix+"Next");
+  if(!actorsEl) return;
+  actorsEl.innerHTML = actors.map(function(a,i){ return '<div class="flow-actor" data-i="'+i+'"><span class="ico">'+a.ico+'</span>'+a.label+'</div>'; }).join("");
+  dotsEl.innerHTML = steps.map(function(){ return "<span></span>"; }).join("");
+  var idx = 0;
+  function render(){
+    actorsEl.querySelectorAll(".flow-actor").forEach(function(el){
+      el.classList.toggle("active", steps[idx].active.indexOf(+el.dataset.i)>-1);
+    });
+    msgEl.innerHTML = '<div class="m">'+steps[idx].msg+'</div><div>'+steps[idx].desc+'</div>';
+    dotsEl.querySelectorAll("span").forEach(function(d,i){ d.classList.toggle("on", i===idx); });
+    prevBtn.disabled = idx===0;
+    nextBtn.textContent = idx===steps.length-1 ? "Reiniciar ↺" : "Próximo →";
+  }
+  prevBtn.addEventListener("click", function(){ if(idx>0){ idx--; render(); } });
+  nextBtn.addEventListener("click", function(){ if(idx===steps.length-1){ idx=0; } else { idx++; } render(); });
+  render();
+}
+
+initFlow("netFlow",
+  [{ico:"🖥️",label:"Seu PC"},{ico:"📡",label:"Roteador"},{ico:"🌐",label:"ISP"},{ico:"🖧",label:"Backbone"},{ico:"🗄️",label:"Servidor"}],
+  [
+    {active:[0],msg:"1. Você digita o endereço",desc:"O navegador precisa primeiro descobrir o IP do site (consulta DNS — veja o módulo 10)."},
+    {active:[0,1],msg:"2. Pacotes saem pelo seu roteador",desc:"Seu roteador doméstico encaminha os pacotes para fora da sua rede local, até o provedor (ISP)."},
+    {active:[1,2],msg:"3. O provedor (ISP) assume",desc:"Sua operadora de internet roteia o tráfego para a rede dela e decide o próximo salto."},
+    {active:[2,3],msg:"4. Viagem pelos backbones",desc:"O tráfego atravessa links de alta capacidade entre provedores (peering) até chegar perto do destino."},
+    {active:[3,4],msg:"5. Chegada ao servidor",desc:"Os pacotes chegam ao servidor que hospeda o site, que processa e devolve a resposta pelo caminho (possivelmente diferente)."},
+    {active:[0,4],msg:"6. A página aparece",desc:"Seu navegador remonta os dados recebidos e renderiza a página — tudo isso em geral leva menos de um segundo."}
+  ]
+);
+
+initFlow("tcpFlow",
+  [{ico:"💻",label:"Cliente"},{ico:"🗄️",label:"Servidor"}],
+  [
+    {active:[0,1],msg:"SYN →",desc:"O cliente envia um segmento SYN (synchronize), propondo iniciar uma conexão e informando um número de sequência inicial."},
+    {active:[0,1],msg:"← SYN-ACK",desc:"O servidor responde com SYN-ACK: confirma o SYN do cliente e propõe seu próprio número de sequência."},
+    {active:[0,1],msg:"ACK →",desc:"O cliente confirma com ACK. A partir daqui a conexão está estabelecida e os dados começam a fluir."},
+    {active:[0,1],msg:"✓ Conexão estabelecida",desc:"Agora sim os dados da aplicação (ex.: a requisição HTTP) são transmitidos com confiabilidade e ordem garantidas."}
+  ]
+);
+
+initFlow("dnsFlow",
+  [{ico:"💻",label:"Você"},{ico:"🗂️",label:"Resolvedor"},{ico:"🌍",label:"Raiz"},{ico:"🏷️",label:"TLD (.com)"},{ico:"🗄️",label:"Autoritativo"}],
+  [
+    {active:[0,1],msg:"Consulta inicial",desc:"Seu computador pergunta ao resolvedor DNS (normalmente do seu provedor) o IP de www.exemplo.com."},
+    {active:[1,2],msg:"Pergunta ao servidor raiz",desc:"Se não está em cache, o resolvedor pergunta a um dos servidores raiz: 'quem cuida do .com?'"},
+    {active:[1,3],msg:"Pergunta ao servidor TLD",desc:"A raiz aponta o servidor responsável por '.com'; o resolvedor pergunta a ele quem cuida de 'exemplo.com'."},
+    {active:[1,4],msg:"Pergunta ao servidor autoritativo",desc:"O TLD aponta o servidor autoritativo de exemplo.com, que finalmente responde com o IP exato do site."},
+    {active:[0,1],msg:"Resposta final",desc:"O resolvedor entrega o IP ao seu computador — e guarda em cache por um tempo (TTL) para não repetir tudo de novo."}
+  ]
+);
+
+initFlow("dhcpFlow",
+  [{ico:"💻",label:"Cliente"},{ico:"🗄️",label:"Servidor DHCP"}],
+  [
+    {active:[0],msg:"D — Discover",desc:"O cliente, sem IP ainda, manda um broadcast: 'alguém tem um endereço IP para mim?'"},
+    {active:[1],msg:"O — Offer",desc:"Um servidor DHCP disponível oferece um IP livre da sua faixa, junto com máscara, gateway e DNS."},
+    {active:[0],msg:"R — Request",desc:"O cliente aceita formalmente a oferta, pedindo (em broadcast) para confirmar aquele IP especificamente."},
+    {active:[1],msg:"A — Acknowledge",desc:"O servidor confirma a concessão (lease) daquele IP por um período determinado, e o cliente já pode usá-lo."}
+  ]
+);
+
+/* ============================ OSI CARDS ============================ */
+var OSI = [
+  {n:7,name:"Aplicação",pdu:"Dados",ex:"HTTP, FTP, SMTP, DNS",fn:"Interface com o usuário/aplicativo: o que o programa realmente quer fazer."},
+  {n:6,name:"Apresentação",pdu:"Dados",ex:"SSL/TLS, JPEG, ASCII",fn:"Formata, criptografa e comprime os dados para um formato comum."},
+  {n:5,name:"Sessão",pdu:"Dados",ex:"NetBIOS, RPC",fn:"Abre, mantém e encerra sessões de comunicação entre aplicações."},
+  {n:4,name:"Transporte",pdu:"Segmento",ex:"TCP, UDP",fn:"Garante (ou não) entrega confiável e controla portas de origem/destino."},
+  {n:3,name:"Rede",pdu:"Pacote",ex:"IP, ICMP",fn:"Endereçamento lógico (IP) e roteamento entre redes diferentes."},
+  {n:2,name:"Enlace",pdu:"Quadro",ex:"Ethernet, Wi-Fi, ARP",fn:"Endereçamento físico (MAC) e entrega dentro do mesmo enlace local."},
+  {n:1,name:"Física",pdu:"Bits",ex:"Cabos, rádio, conectores",fn:"Transmite bits brutos como sinais elétricos, luminosos ou de rádio."}
+];
+document.getElementById("osiGrid").innerHTML = OSI.map(function(l){
+  return '<div class="flip" data-n="'+l.n+'"><div class="flip-inner">'+
+    '<div class="flip-face front"><span class="n">CAMADA '+l.n+'</span><span class="t">'+l.name+'</span></div>'+
+    '<div class="flip-face back"><b>PDU:</b> '+l.pdu+'<br><b>Exemplos:</b> '+l.ex+'<br><br>'+l.fn+'</div>'+
+  '</div></div>';
+}).join("");
+document.getElementById("osiGrid").addEventListener("click", function(e){
+  var card = e.target.closest(".flip");
+  if(card) card.classList.toggle("open");
+});
+
+/* ============================ ENCAPSULATION ============================ */
+var ENCAP_LAYERS = {7:"Aplicação",6:"Apresentação",5:"Sessão",4:"Transporte",3:"Rede",2:"Enlace",1:"Física"};
+var ENCAP_PDU = {7:"Dados (L7 Aplicação)",6:"Dados (L6)",5:"Dados (L5)",4:"Segmento (L4 Transporte)",3:"Pacote (L3 Rede)",2:"Quadro/Frame (L2 Enlace)",1:"Bits (L1 Física)"};
+var encapStep = 1;
+function renderEncap(){
+  var html = '<div class="encap-box l7"><span>Dados da Aplicação</span>payload do usuário</div>';
+  var order = [6,5,4,3,2,1];
+  for(var i=0;i<encapStep-1;i++){
+    var ln = order[i];
+    html = '<div class="encap-box l'+ln+'"><span>L'+ln+' '+ENCAP_LAYERS[ln]+' — adiciona cabeçalho</span>'+html+'</div>';
+  }
+  document.getElementById("encapWrap").innerHTML = html;
+  document.getElementById("encapPdu").textContent = ENCAP_PDU[8-encapStep];
+  document.getElementById("encapFwd").disabled = encapStep>=7;
+  document.getElementById("encapBack").disabled = encapStep<=1;
+}
+document.getElementById("encapFwd").addEventListener("click", function(){ if(encapStep<7){ encapStep++; renderEncap(); } });
+document.getElementById("encapBack").addEventListener("click", function(){ if(encapStep>1){ encapStep--; renderEncap(); } });
+renderEncap();
+
+/* ============================ SUBNET CALCULATOR ============================ */
+function i2ip(n){ return [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join("."); }
+function coloredBinary(ipInt,cidr){
+  var bits=""; for(var i=31;i>=0;i--){ bits += (ipInt>>>i)&1; }
+  var html=""; for(var j=0;j<32;j++){
+    if(j>0 && j%8===0) html += '<span class="dot">.</span>';
+    html += '<span class="'+(j<cidr?"net":"host")+'">'+bits[j]+'</span>';
+  }
+  return html;
+}
+function calcSubnet(){
+  var out = document.getElementById("subOut");
+  var ipStr = document.getElementById("subIp").value.trim();
+  var cidr = parseInt(document.getElementById("subCidr").value,10);
+  var parts = ipStr.split(".").map(function(p){return parseInt(p,10);});
+  if(parts.length!==4 || parts.some(function(p){return isNaN(p)||p<0||p>255;}) || isNaN(cidr) || cidr<0 || cidr>32){
+    out.innerHTML = '<p class="err">IP ou prefixo CIDR inválido. Use algo como 192.168.1.10 e um número de 0 a 32.</p>';
+    return;
+  }
+  var ipInt = ((parts[0]<<24) | (parts[1]<<16) | (parts[2]<<8) | parts[3])>>>0;
+  var maskInt = cidr===0 ? 0 : (0xFFFFFFFF << (32-cidr))>>>0;
+  var network = (ipInt & maskInt)>>>0;
+  var broadcast = (network | (~maskInt>>>0))>>>0;
+  var totalHosts = Math.pow(2,32-cidr);
+  var usable, first, last;
+  if(cidr>=31){ usable = cidr===32?1:2; first=network; last=broadcast; }
+  else { usable = totalHosts-2; first=network+1; last=broadcast-1; }
+  var fo = parts[0];
+  var klass = "E (experimental)";
+  if(fo<=126) klass="A"; else if(fo===127) klass="Loopback"; else if(fo<=191) klass="B"; else if(fo<=223) klass="C"; else if(fo<=239) klass="D (multicast)";
+  var priv = "Pública (roteável na internet)";
+  if(fo===10 || (fo===172 && parts[1]>=16 && parts[1]<=31) || (fo===192 && parts[1]===168)) priv = "Privada (RFC 1918)";
+  else if(fo===169 && parts[1]===254) priv = "Link-local (APIPA)";
+  else if(fo===127) priv = "Loopback";
+  out.innerHTML =
+    '<dl class="kv">'+
+      '<dt>Endereço de rede</dt><dd class="ip">'+i2ip(network)+' /'+cidr+'</dd>'+
+      '<dt>Máscara de sub-rede</dt><dd class="ip">'+i2ip(maskInt)+'</dd>'+
+      '<dt>Endereço de broadcast</dt><dd class="ip">'+i2ip(broadcast)+'</dd>'+
+      '<dt>Faixa de hosts válidos</dt><dd class="ip">'+i2ip(first)+' – '+i2ip(last)+'</dd>'+
+      '<dt>Hosts utilizáveis</dt><dd>'+usable.toLocaleString("pt-BR")+'</dd>'+
+      '<dt>Classe histórica</dt><dd>'+klass+'</dd>'+
+      '<dt>Tipo de endereço</dt><dd>'+priv+'</dd>'+
+    '</dl>'+
+    '<h3>Decomposição em binário</h3>'+
+    '<div class="bin">'+coloredBinary(ipInt,cidr)+'</div>'+
+    '<div class="legend"><span><span class="sw" style="background:var(--accent)"></span>bits de rede ('+cidr+')</span><span><span class="sw" style="background:var(--accent-2)"></span>bits de host ('+(32-cidr)+')</span></div>';
+}
+document.getElementById("subCalc").addEventListener("click", calcSubnet);
+["subIp","subCidr"].forEach(function(id){
+  document.getElementById(id).addEventListener("keydown", function(e){ if(e.key==="Enter") calcSubnet(); });
+});
+calcSubnet();
+
+/* ============================ TOPOLOGY SIMULATOR ============================ */
+var TOPOS = {
+  estrela: {
+    label:"Estrela",
+    nodes:[{id:"H",x:200,y:110,label:"HUB/SW"},{id:"A",x:200,y:30,label:"PC-A"},{id:"B",x:320,y:70,label:"PC-B"},{id:"C",x:320,y:160,label:"PC-C"},{id:"D",x:80,y:160,label:"PC-D"},{id:"E",x:80,y:70,label:"PC-E"}],
+    edges:[["H","A"],["H","B"],["H","C"],["H","D"],["H","E"]],
+    explain:function(failed){
+      if(failed==="H") return "O concentrador central falhou: <b>toda a rede fica isolada</b> — ninguém consegue se comunicar. Esse é o ponto único de falha da topologia estrela.";
+      return "Apenas <b>"+failed+"</b> ficou isolado. Todos os outros nós continuam se comunicando normalmente através do concentrador — essa é a grande vantagem da estrela.";
+    }
+  },
+  barramento: {
+    label:"Barramento",
+    nodes:[{id:"A",x:40,y:110,label:"PC-A"},{id:"B",x:130,y:110,label:"PC-B"},{id:"C",x:220,y:110,label:"PC-C"},{id:"D",x:310,y:110,label:"PC-D"},{id:"E",x:360,y:110,label:"PC-E"}],
+    edges:[["A","B"],["B","C"],["C","D"],["D","E"]],
+    explain:function(failed){
+      return "Um dispositivo com defeito (<b>"+failed+"</b>) normalmente não derruba o barramento — mas se o <b>cabo compartilhado</b> se rompe em qualquer ponto, toda a comunicação além da ruptura para. É por isso que o barramento caiu em desuso: um único corte de cabo compromete a rede inteira.";
+    }
+  },
+  anel: {
+    label:"Anel",
+    nodes:[{id:"A",x:200,y:30,label:"PC-A"},{id:"B",x:330,y:90,label:"PC-B"},{id:"C",x:290,y:190,label:"PC-C"},{id:"D",x:110,y:190,label:"PC-D"},{id:"E",x:70,y:90,label:"PC-E"}],
+    edges:[["A","B"],["B","C"],["C","D"],["D","E"],["E","A"]],
+    explain:function(failed){
+      return "Em um anel simples (sem redundância), quando <b>"+failed+"</b> falha, o círculo se rompe: os dados não conseguem mais completar a volta, interrompendo a comunicação entre os nós dos dois lados da falha. Anéis duplos (como FDDI) resolvem isso com um segundo caminho em sentido contrário.";
+    }
+  },
+  malha: {
+    label:"Malha",
+    nodes:[{id:"A",x:200,y:25,label:"PC-A"},{id:"B",x:335,y:90,label:"PC-B"},{id:"C",x:280,y:195,label:"PC-C"},{id:"D",x:120,y:195,label:"PC-D"},{id:"E",x:65,y:90,label:"PC-E"}],
+    edges:[["A","B"],["A","C"],["A","D"],["A","E"],["B","C"],["B","D"],["B","E"],["C","D"],["C","E"],["D","E"]],
+    explain:function(failed){
+      return "Mesmo com <b>"+failed+"</b> fora do ar, todos os outros nós continuam totalmente conectados entre si por caminhos alternativos diretos. É a topologia mais resiliente — ao custo de muito mais cabeamento/enlaces.";
+    }
+  }
+};
+var currentTopo = "estrela";
+var topoSeg = document.getElementById("topoSeg");
+topoSeg.innerHTML = Object.keys(TOPOS).map(function(k,i){ return '<button data-k="'+k+'" class="'+(i===0?"on":"")+'">'+TOPOS[k].label+'</button>'; }).join("");
+function drawTopo(){
+  var t = TOPOS[currentTopo];
+  var svg = document.getElementById("topoSvg");
+  var html = "";
+  t.edges.forEach(function(e){
+    var n1 = t.nodes.find(function(n){return n.id===e[0];}), n2 = t.nodes.find(function(n){return n.id===e[1];});
+    html += '<line class="topo-edge" data-e="'+e[0]+e[1]+'" x1="'+n1.x+'" y1="'+n1.y+'" x2="'+n2.x+'" y2="'+n2.y+'"/>';
+  });
+  t.nodes.forEach(function(n){
+    html += '<g class="topo-node" data-id="'+n.id+'" transform="translate('+n.x+','+n.y+')">'+
+      '<circle r="20"/><text text-anchor="middle" dy="4">'+n.id+'</text></g>';
+  });
+  svg.innerHTML = html;
+  document.getElementById("topoResult").innerHTML = "";
+}
+function failNode(id){
+  var t = TOPOS[currentTopo];
+  document.querySelector('.topo-node[data-id="'+id+'"]').classList.add("failed");
+  t.edges.forEach(function(e){
+    if(e[0]===id || e[1]===id) document.querySelector('.topo-edge[data-e="'+e[0]+e[1]+'"]').classList.add("dead");
+  });
+  document.getElementById("topoResult").innerHTML = t.explain(id);
+}
+document.getElementById("topoSvg").addEventListener("click", function(e){
+  var node = e.target.closest(".topo-node");
+  if(node && !node.classList.contains("failed")) failNode(node.dataset.id);
+});
+topoSeg.addEventListener("click", function(e){
+  var btn = e.target.closest("button"); if(!btn) return;
+  topoSeg.querySelectorAll("button").forEach(function(b){ b.classList.toggle("on", b===btn); });
+  currentTopo = btn.dataset.k;
+  drawTopo();
+});
+document.getElementById("topoReset").addEventListener("click", drawTopo);
+drawTopo();
+
+/* ============================ HUB x SWITCH ============================ */
+var hsMode = "hub";
+var hsSeg = document.getElementById("hsSeg");
+hsSeg.innerHTML = '<button data-m="hub" class="on">Modo Hub</button><button data-m="switch">Modo Switch</button>';
+var HS_NODES = [{id:"PC1",x:200,y:30},{id:"PC2",x:335,y:90},{id:"PC3",x:280,y:195},{id:"PC4",x:65,y:90}];
+function drawHS(){
+  var svg = document.getElementById("hsSvg");
+  var html = '<g transform="translate(140,140)"><rect x="-30" y="-16" width="60" height="32" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="2"/><text text-anchor="middle" dy="5" font-family="IBM Plex Mono" font-size="10" fill="var(--fg)">'+(hsMode==="hub"?"HUB":"SWITCH")+'</text></g>';
+  HS_NODES.forEach(function(n){
+    html += '<line class="hs-line" data-to="'+n.id+'" x1="140" y1="140" x2="'+n.x+'" y2="'+n.y+'"/>';
+  });
+  HS_NODES.forEach(function(n){
+    html += '<g transform="translate('+n.x+','+n.y+')"><circle r="19" fill="var(--surface-2)" stroke="var(--border)" stroke-width="2"/><text text-anchor="middle" dy="4" font-family="IBM Plex Mono" font-size="9" fill="var(--fg)">'+n.id+'</text></g>';
+  });
+  svg.innerHTML = html;
+  document.getElementById("hsResult").textContent = "";
+}
+hsSeg.addEventListener("click", function(e){
+  var btn = e.target.closest("button"); if(!btn) return;
+  hsSeg.querySelectorAll("button").forEach(function(b){ b.classList.toggle("on", b===btn); });
+  hsMode = btn.dataset.m;
+  drawHS();
+});
+document.getElementById("hsSend").addEventListener("click", function(){
+  document.querySelectorAll(".hs-line").forEach(function(l){ l.classList.remove("on","bad"); });
+  document.querySelector('.hs-line[data-to="PC1"]').classList.add("on");
+  setTimeout(function(){
+    if(hsMode==="hub"){
+      document.querySelectorAll(".hs-line").forEach(function(l){ l.classList.add("on","bad"); });
+      document.getElementById("hsResult").innerHTML = "<b>Modo Hub:</b> o quadro foi repetido para <b>todas</b> as portas (PC2, PC3 e PC4 recebem, mesmo não sendo o destino — só PC2 vai processar, os outros descartam). Ineficiente e inseguro.";
+    } else {
+      document.querySelector('.hs-line[data-to="PC2"]').classList.add("on");
+      document.getElementById("hsResult").innerHTML = "<b>Modo Switch:</b> consultando sua tabela MAC, o switch envia o quadro <b>somente</b> para a porta de PC2. PC3 e PC4 nunca veem esse tráfego.";
+    }
+  }, 450);
+});
+drawHS();
+
+/* ============================ VLAN SIMULATOR ============================ */
+var vlanState = {P1:10,P2:10,P3:20,P4:20};
+function renderVlan(){
+  var wrap = document.getElementById("vlanPorts");
+  wrap.innerHTML = Object.keys(vlanState).map(function(p){
+    return '<div class="card" style="padding:10px 12px"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-family:\'IBM Plex Mono\';font-size:13px">'+p+'</b>'+
+      '<select data-p="'+p+'" style="padding:5px 8px;border-radius:7px;border:1px solid var(--border);background:var(--surface);color:var(--fg);font:inherit;font-size:12.5px">'+
+      '<option value="10"'+(vlanState[p]===10?" selected":"")+'>VLAN 10</option>'+
+      '<option value="20"'+(vlanState[p]===20?" selected":"")+'>VLAN 20</option></select></div></div>';
+  }).join("");
+  var groups = {};
+  Object.keys(vlanState).forEach(function(p){ (groups[vlanState[p]] = groups[vlanState[p]]||[]).push(p); });
+  var lines = Object.keys(groups).map(function(v){ return "VLAN "+v+": "+groups[v].join(", ")+" conversam entre si"; });
+  document.getElementById("vlanResult").innerHTML = lines.join(" · ") + ". <b>Portas em VLANs diferentes não se enxergam</b> sem um roteador fazendo inter-VLAN routing.";
+}
+document.getElementById("vlanPorts").addEventListener("change", function(e){
+  if(e.target.dataset.p){ vlanState[e.target.dataset.p] = parseInt(e.target.value,10); renderVlan(); }
+});
+renderVlan();
+
+/* ============================ INTEGRATED LAB ============================ */
+var LAB_NODES = {A:{x:70,y:55},B:{x:70,y:150},C:{x:70,y:245},SW:{x:260,y:150},RT:{x:460,y:150},NET:{x:640,y:150}};
+var labState, labRunning = false;
+function labFreshState(){ return { ip:{A:null,B:"192.168.10.102",C:"192.168.20.101"}, mac:{A:"AA:A1:01",B:"AA:A1:02",C:"AA:A1:03",RT10:"0C:1A:10",RT20:"0C:1A:20"}, macTable:{}, arp:{}, nat:[], dhcp:{} }; }
+labState = labFreshState();
+
+function renderLabTopo(){
+  var svg = document.getElementById("labSvg");
+  if(!svg) return;
+  var html = "";
+  var edges = [["A","SW",""],["B","SW",""],["C","SW",""],["SW","RT","trunk"],["RT","NET",""]];
+  edges.forEach(function(e){
+    var n1=LAB_NODES[e[0]], n2=LAB_NODES[e[1]];
+    html += '<line class="lab-edge'+(e[2]==="trunk"?" trunk":"")+'" data-e="'+e[0]+e[1]+'" x1="'+n1.x+'" y1="'+n1.y+'" x2="'+n2.x+'" y2="'+n2.y+'"/>';
+  });
+  html += '<text x="360" y="130" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="var(--fg-muted)">trunk 802.1Q</text>';
+  html += '<text x="550" y="130" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="var(--fg-muted)">NAT</text>';
+  [["A","PC-A","10"],["B","PC-B","10"],["C","PC-C","20"]].forEach(function(p){
+    var n=LAB_NODES[p[0]];
+    var vlanColor = p[2]==="10" ? "var(--lvl-basico)":"var(--lvl-inter)";
+    html += '<g class="lab-node" transform="translate('+n.x+','+n.y+')">'+
+      '<circle r="24" style="stroke:'+vlanColor+'"/>'+
+      '<text text-anchor="middle" dy="-2">'+p[1]+'</text>'+
+      '<text class="ip" id="lbl-ip-'+p[0]+'" text-anchor="middle" dy="10">'+(labState.ip[p[0]]||"sem IP")+'</text>'+
+      '<text text-anchor="middle" dy="36" font-size="8" fill="'+vlanColor+'">VLAN '+p[2]+'</text>'+
+    '</g>';
+  });
+  html += '<g class="lab-node" transform="translate('+LAB_NODES.SW.x+','+LAB_NODES.SW.y+')">'+
+    '<rect x="-30" y="-20" width="60" height="40" rx="8"/>'+
+    '<text text-anchor="middle" dy="-2">SWITCH</text><text class="ip" text-anchor="middle" dy="12">camada 2</text></g>';
+  html += '<g class="lab-node" transform="translate('+LAB_NODES.RT.x+','+LAB_NODES.RT.y+')">'+
+    '<rect x="-38" y="-26" width="76" height="52" rx="8"/>'+
+    '<text text-anchor="middle" dy="-8">ROTEADOR</text><text class="ip" text-anchor="middle" dy="4">.10.1 / .20.1</text><text class="ip" text-anchor="middle" dy="16">DHCP · NAT</text></g>';
+  html += '<g class="lab-node" transform="translate('+LAB_NODES.NET.x+','+LAB_NODES.NET.y+')">'+
+    '<ellipse rx="40" ry="28"/>'+
+    '<text text-anchor="middle" dy="-2">INTERNET</text><text class="ip" text-anchor="middle" dy="12">198.51.100.23</text></g>';
+  html += '<g id="labPacketLayer"></g>';
+  svg.innerHTML = html;
+}
+function labLog(msg, cls){
+  var el = document.getElementById("labLog"); if(!el) return;
+  var div = document.createElement("div");
+  div.className = "ln"+(cls?(" "+cls):"");
+  div.textContent = msg;
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+}
+function labClearLog(){ var el=document.getElementById("labLog"); if(el) el.innerHTML=""; }
+function labSetTable(id, rows, cols){
+  var el = document.getElementById(id); if(!el) return;
+  if(!rows.length){ el.innerHTML = '<span class="empty">vazia</span>'; return; }
+  el.innerHTML = "<table><tr>"+cols.map(function(c){return "<th>"+c+"</th>";}).join("")+"</tr>"+
+    rows.map(function(r){ return "<tr>"+r.map(function(v){return "<td>"+v+"</td>";}).join("")+"</tr>"; }).join("")+"</table>";
+}
+function labRenderTables(){
+  labSetTable("labMacTable", Object.keys(labState.macTable).map(function(p){return [p, labState.macTable[p]];}), ["Porta","MAC"]);
+  labSetTable("labArpTable", Object.keys(labState.arp).map(function(ip){return [ip, labState.arp[ip]];}), ["IP","MAC"]);
+  labSetTable("labNatTable", labState.nat.map(function(n){return [n.int, n.ext, n.dst];}), ["Interno","Externo (NAT)","Destino"]);
+  labSetTable("labDhcpTable", Object.keys(labState.dhcp).map(function(ip){return [ip, labState.dhcp[ip]];}), ["IP concedido","Host"]);
+}
+function labSleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+function labMove(fromId, toId, label, color){
+  return new Promise(function(resolve){
+    var ticker = document.getElementById("labTicker"); if(ticker) ticker.textContent = label;
+    var edge = document.querySelector('.lab-edge[data-e="'+fromId+toId+'"]') || document.querySelector('.lab-edge[data-e="'+toId+fromId+'"]');
+    if(edge) edge.classList.add("active");
+    var layer = document.getElementById("labPacketLayer");
+    var from = LAB_NODES[fromId], to = LAB_NODES[toId];
+    var dot = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    dot.setAttribute("r","6");
+    dot.style.fill = color || "var(--accent)";
+    layer.appendChild(dot);
+    var start=null, dur=600;
+    function step(ts){
+      if(!start) start=ts;
+      var t=Math.min((ts-start)/dur,1);
+      dot.setAttribute("cx", from.x+(to.x-from.x)*t);
+      dot.setAttribute("cy", from.y+(to.y-from.y)*t);
+      if(t<1){ requestAnimationFrame(step); }
+      else { layer.removeChild(dot); if(edge) edge.classList.remove("active"); resolve(); }
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+async function labScDhcp(){
+  labLog("[PC-A] Ainda sem IP. Vai pedir um endereço via DHCP.","pc");
+  await labMove("A","SW","DHCPDISCOVER (broadcast) — PC-A → Switch","var(--accent)");
+  labLog("[Switch] Recebe na porta de PC-A (VLAN 10). Inunda para todas as portas da VLAN 10, menos a de origem.","sw");
+  await labMove("SW","B","Flood na VLAN 10 — PC-B recebe e ignora","var(--accent)");
+  await labMove("SW","RT","DHCPDISCOVER — Switch → Roteador","var(--accent)");
+  await labSleep(150);
+  labLog("[Roteador] Serviço DHCP escolhe um IP livre do pool 192.168.10.0/24.","rt");
+  await labMove("RT","SW","DHCPOFFER: 192.168.10.101","var(--accent)");
+  await labMove("SW","A","DHCPOFFER — Switch → PC-A","var(--accent)");
+  labLog("[PC-A] Aceita a oferta.","pc");
+  await labMove("A","SW","DHCPREQUEST (broadcast)","var(--accent)");
+  await labMove("SW","RT","DHCPREQUEST — Switch → Roteador","var(--accent)");
+  labLog("[Roteador] Confirma a concessão por 24 horas (DHCPACK).","rt");
+  await labMove("RT","SW","DHCPACK: 192.168.10.101","var(--accent)");
+  await labMove("SW","A","DHCPACK — Switch → PC-A","var(--accent)");
+  labState.ip.A = "192.168.10.101";
+  labState.dhcp["192.168.10.101"] = "PC-A ("+labState.mac.A+")";
+  labState.macTable["porta 1 (PC-A)"] = labState.mac.A;
+  var lbl = document.getElementById("lbl-ip-A"); if(lbl) lbl.textContent = labState.ip.A;
+  labRenderTables();
+  labLog("[PC-A] Configurado: IP 192.168.10.101/24, gateway 192.168.10.1.","pc");
+}
+async function labScArp(){
+  if(!labState.ip.A){ labLog("Rode primeiro a etapa ① — PC-A precisa de um IP.","warn"); return; }
+  labLog("[PC-A] Precisa enviar um pacote para fora da sua rede. Primeiro, descobre o MAC do gateway 192.168.10.1.","pc");
+  await labMove("A","SW","ARP: quem tem 192.168.10.1?","var(--accent-2)");
+  labLog("[Switch] Inunda o pedido ARP para toda a VLAN 10.","sw");
+  await labMove("SW","B","ARP (PC-B ignora, não é ele)","var(--accent-2)");
+  await labMove("SW","RT","ARP request — Switch → Roteador","var(--accent-2)");
+  labLog("[Roteador] Reconhece seu próprio IP na sub-interface VLAN10 e responde.","rt");
+  await labMove("RT","SW","ARP reply: MAC "+labState.mac.RT10,"var(--accent-2)");
+  await labMove("SW","A","ARP reply — Switch → PC-A","var(--accent-2)");
+  labState.arp["192.168.10.1"] = labState.mac.RT10;
+  labState.macTable["porta 1 (PC-A)"] = labState.mac.A;
+  labState.macTable["uplink (Roteador)"] = labState.mac.RT10;
+  labRenderTables();
+  labLog("[PC-A] Guardou o MAC do gateway em cache ARP. Pronto para montar o quadro Ethernet.","pc");
+}
+async function labScInternet(){
+  if(!labState.ip.A){ labLog("Rode primeiro a etapa ① — PC-A precisa de um IP.","warn"); return; }
+  labLog("[PC-A] Monta um pacote TCP: origem 192.168.10.101, destino 198.51.100.23:443.","pc");
+  await labMove("A","SW","SYN → 198.51.100.23:443","var(--good)");
+  await labMove("SW","RT","SYN — Switch → Roteador","var(--good)");
+  labLog("[Roteador] Antes de rotear à internet, aplica NAT (PAT): 192.168.10.101:51342 → 203.0.113.9:51342.","rt");
+  labState.nat.push({int:"192.168.10.101:51342", ext:"203.0.113.9:51342", dst:"198.51.100.23:443"});
+  labRenderTables();
+  await labMove("RT","NET","SYN (NAT: 203.0.113.9:51342)","var(--good)");
+  labLog("[Internet] O pacote atravessa a internet até o servidor.","net");
+  await labMove("NET","RT","← SYN-ACK","var(--good)");
+  labLog("[Roteador] Consulta a tabela de NAT e traduz de volta para 192.168.10.101:51342.","rt");
+  await labMove("RT","SW","SYN-ACK — Roteador → Switch","var(--good)");
+  await labMove("SW","A","SYN-ACK — Switch → PC-A","var(--good)");
+  await labMove("A","SW","ACK →","var(--good)");
+  await labMove("SW","RT","ACK — Switch → Roteador","var(--good)");
+  await labMove("RT","NET","ACK (NAT) → Internet","var(--good)");
+  labLog("[PC-A] Conexão TCP estabelecida. A partir daqui os dados da aplicação fluem normalmente.","pc");
+}
+async function labScSameVlan(){
+  labLog("[PC-A] Quer falar com PC-B (192.168.10.102) — mesma sub-rede/VLAN, não precisa do roteador.","pc");
+  await labMove("A","SW","ARP: quem tem 192.168.10.102?","var(--accent-2)");
+  await labMove("SW","B","ARP request — Switch → PC-B","var(--accent-2)");
+  await labMove("B","SW","ARP reply: MAC "+labState.mac.B,"var(--accent-2)");
+  await labMove("SW","A","ARP reply — Switch → PC-A","var(--accent-2)");
+  labState.arp["192.168.10.102"] = labState.mac.B;
+  labState.macTable["porta 2 (PC-B)"] = labState.mac.B;
+  labRenderTables();
+  await labMove("A","SW","Quadro de dados →","var(--good)");
+  await labMove("SW","B","Quadro de dados — Switch → PC-B","var(--good)");
+  labLog("[Switch] A e B estão na mesma VLAN (10): encaminha direto pela tabela MAC, sem o roteador.","sw");
+}
+async function labScDiffVlan(){
+  labLog("[PC-A] Tenta falar com PC-C (192.168.20.101) — repare: é outra sub-rede e outra VLAN.","pc");
+  await labMove("A","SW","Quadro destinado a 192.168.20.101","var(--bad)");
+  labLog("[Switch] A porta de PC-C está na VLAN 20; a de PC-A está na VLAN 10. Um switch NUNCA encaminha tráfego entre VLANs diferentes — são domínios de broadcast isolados.","warn");
+  labLog("[PC-A] O sistema operacional já sabe disso: como 192.168.20.101 não está na mesma sub-rede, o pacote vai para o gateway, não direto — veja a etapa ⑥.","pc");
+}
+async function labScInterVlan(){
+  if(!labState.ip.A){ labLog("Rode primeiro a etapa ① — PC-A precisa de um IP.","warn"); return; }
+  labLog("[PC-A] Para alcançar 192.168.20.101, envia o pacote para o gateway 192.168.10.1 — igual fez para a internet.","pc");
+  await labMove("A","SW","Pacote → gateway","var(--accent)");
+  await labMove("SW","RT","Pacote (sub-interface VLAN10)","var(--accent)");
+  labLog("[Roteador] Consulta a tabela de roteamento: 192.168.20.0/24 está diretamente conectado na sub-interface VLAN20. Isso é 'router-on-a-stick' — uma porta física com sub-interfaces 802.1Q roteando entre as VLANs do switch.","rt");
+  await labMove("RT","SW","Pacote (sub-interface VLAN20)","var(--accent)");
+  await labMove("SW","C","Pacote → PC-C","var(--accent)");
+  labLog("[PC-C] Recebe o pacote de PC-A. A resposta percorre o caminho inverso, sempre passando pelo roteador.","pc");
+  labLog("✓ PC-A e PC-C agora se comunicam — nunca direto pelo switch, sempre via roteamento.","rt");
+}
+var LAB_SCENARIOS = {dhcp:labScDhcp, arp:labScArp, internet:labScInternet, samevlan:labScSameVlan, diffvlan:labScDiffVlan, intervlan:labScInterVlan};
+function labSetRunning(v){
+  labRunning = v;
+  document.querySelectorAll(".lab-btn").forEach(function(b){ b.disabled = v; });
+  var r = document.getElementById("labReset"); if(r) r.disabled = v;
+}
+document.querySelectorAll(".lab-btn").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    if(labRunning) return;
+    labSetRunning(true);
+    LAB_SCENARIOS[btn.dataset.sc]().then(function(){
+      var t = document.getElementById("labTicker"); if(t) t.textContent = "Pronto. Escolha outra etapa.";
+      labSetRunning(false);
+    });
+  });
+});
+var labResetBtn = document.getElementById("labReset");
+if(labResetBtn) labResetBtn.addEventListener("click", function(){
+  labState = labFreshState();
+  renderLabTopo();
+  labRenderTables();
+  labClearLog();
+  document.getElementById("labTicker").textContent = "Pronto. Escolha uma etapa acima para começar.";
+});
+renderLabTopo();
+labRenderTables();
+
+/* ============================ FIREWALL SIMULATOR ============================ */
+var FW_RULES = [
+  {proto:"TCP",port:443,action:"allow"},
+  {proto:"TCP",port:80,action:"allow"},
+  {proto:"UDP",port:53,action:"allow"},
+  {proto:"TCP",port:23,action:"block"},
+  {proto:"TCP",port:3389,action:"block"}
+];
+var fwRunning = false;
+async function runFirewallTest(proto,port){
+  if(fwRunning) return;
+  fwRunning = true;
+  document.querySelectorAll(".fw-btn").forEach(function(b){ b.disabled = true; });
+  document.querySelectorAll("#fwTable tr").forEach(function(r){ r.classList.remove("fw-row-checking","fw-row-allow","fw-row-block"); });
+  var result = document.getElementById("fwResult");
+  result.textContent = "Avaliando pacote "+proto+"/"+port+"…";
+  for(var i=0;i<FW_RULES.length;i++){
+    var row = document.getElementById("fwRule-"+i);
+    row.classList.add("fw-row-checking");
+    await labSleep(380);
+    if(FW_RULES[i].proto===proto && FW_RULES[i].port===port){
+      row.classList.remove("fw-row-checking");
+      row.classList.add(FW_RULES[i].action==="allow" ? "fw-row-allow":"fw-row-block");
+      result.innerHTML = FW_RULES[i].action==="allow"
+        ? "<b style='color:var(--good)'>✓ PERMITIDO</b> — combinou com a regra "+(i+1)+" ("+proto+"/"+port+")."
+        : "<b style='color:var(--bad)'>✕ BLOQUEADO</b> — combinou com a regra "+(i+1)+" ("+proto+"/"+port+").";
+      fwRunning = false;
+      document.querySelectorAll(".fw-btn").forEach(function(b){ b.disabled = false; });
+      return;
+    }
+    row.classList.remove("fw-row-checking");
+  }
+  var imp = document.getElementById("fwRule-implicit");
+  imp.classList.add("fw-row-block");
+  result.innerHTML = "<b style='color:var(--bad)'>✕ BLOQUEADO</b> — nenhuma regra explícita combinou com "+proto+"/"+port+", então a regra implícita final (negar tudo) se aplica. Esse é o princípio da <b>negação padrão (default deny)</b>.";
+  fwRunning = false;
+  document.querySelectorAll(".fw-btn").forEach(function(b){ b.disabled = false; });
+}
+document.querySelectorAll(".fw-btn").forEach(function(btn){
+  btn.addEventListener("click", function(){ runFirewallTest(btn.dataset.proto, parseInt(btn.dataset.port,10)); });
+});
+
+/* ============================ MITM / ARP SPOOFING SIMULATOR ============================ */
+var MITM_NODES = {PC:{x:70,y:50}, ATK:{x:240,y:175}, GW:{x:420,y:50}};
+function renderMitmTopo(){
+  var svg = document.getElementById("mitmSvg");
+  if(!svg) return;
+  var html = "";
+  [["PC","GW"],["PC","ATK"],["ATK","GW"]].forEach(function(e){
+    var n1=MITM_NODES[e[0]], n2=MITM_NODES[e[1]];
+    html += '<line class="lab-edge" data-e="'+e[0]+e[1]+'" x1="'+n1.x+'" y1="'+n1.y+'" x2="'+n2.x+'" y2="'+n2.y+'"/>';
+  });
+  html += '<g class="lab-node" transform="translate('+MITM_NODES.PC.x+','+MITM_NODES.PC.y+')"><circle r="24" style="stroke:var(--accent)"/><text text-anchor="middle" dy="-2">PC</text><text class="ip" text-anchor="middle" dy="10">192.168.1.50</text></g>';
+  html += '<g class="lab-node" transform="translate('+MITM_NODES.GW.x+','+MITM_NODES.GW.y+')"><circle r="24" style="stroke:var(--good)"/><text text-anchor="middle" dy="-2">GATEWAY</text><text class="ip" text-anchor="middle" dy="10">192.168.1.1</text></g>';
+  html += '<g class="lab-node" transform="translate('+MITM_NODES.ATK.x+','+MITM_NODES.ATK.y+')"><circle r="24" style="stroke:var(--bad)"/><text text-anchor="middle" dy="-2">ATACANTE</text><text class="ip" text-anchor="middle" dy="10">192.168.1.66</text></g>';
+  html += '<g id="mitmPacketLayer"></g>';
+  svg.innerHTML = html;
+}
+function mitmLog(msg,cls){
+  var el=document.getElementById("mitmLog"); if(!el) return;
+  var div=document.createElement("div"); div.className="ln"+(cls?(" "+cls):""); div.textContent=msg;
+  el.appendChild(div); el.scrollTop=el.scrollHeight;
+}
+function mitmMove(fromId,toId,label,color){
+  return new Promise(function(resolve){
+    var ticker=document.getElementById("mitmTicker"); if(ticker) ticker.textContent=label;
+    var edge = document.querySelector('#mitmSvg .lab-edge[data-e="'+fromId+toId+'"]') || document.querySelector('#mitmSvg .lab-edge[data-e="'+toId+fromId+'"]');
+    if(edge) edge.classList.add("active");
+    var layer=document.getElementById("mitmPacketLayer");
+    var from=MITM_NODES[fromId], to=MITM_NODES[toId];
+    var dot=document.createElementNS("http://www.w3.org/2000/svg","circle");
+    dot.setAttribute("r","6"); dot.style.fill=color||"var(--accent)";
+    layer.appendChild(dot);
+    var start=null, dur=650;
+    function step(ts){
+      if(!start) start=ts;
+      var t=Math.min((ts-start)/dur,1);
+      dot.setAttribute("cx", from.x+(to.x-from.x)*t);
+      dot.setAttribute("cy", from.y+(to.y-from.y)*t);
+      if(t<1){ requestAnimationFrame(step); } else { layer.removeChild(dot); if(edge) edge.classList.remove("active"); resolve(); }
+    }
+    requestAnimationFrame(step);
+  });
+}
+var mitmRunning=false;
+function mitmSetRunning(v){ mitmRunning=v; document.querySelectorAll(".mitm-btn").forEach(function(b){b.disabled=v;}); }
+async function mitmNormalScenario(){
+  mitmLog("[PC] Envia ARP: quem tem o IP do gateway?","pc");
+  await mitmMove("PC","GW","ARP: quem tem 192.168.1.1?","var(--accent)");
+  mitmLog("[Gateway] Responde com seu MAC verdadeiro.","rt");
+  await mitmMove("GW","PC","ARP reply: sou eu (MAC real)","var(--good)");
+  mitmLog("[PC] Grava o MAC correto do gateway no cache ARP.","pc");
+  await mitmMove("PC","GW","Dados → direto ao gateway","var(--good)");
+  mitmLog("✓ Tráfego normal: vai direto ao gateway real, sem interceptação.","rt");
+}
+async function mitmAttackScenario(){
+  mitmLog("[Atacante] Envia respostas ARP falsas repetidamente, dizendo que o IP do gateway está no MAC dele (ARP spoofing).","warn");
+  await mitmMove("ATK","PC","ARP reply FALSO: 'eu sou o gateway'","var(--bad)");
+  mitmLog("[PC] Acredita na mensagem e atualiza o cache ARP — agora associa o IP do gateway ao MAC do atacante.","pc");
+  await mitmMove("PC","ATK","Dados → (sem saber, vão para o atacante)","var(--bad)");
+  mitmLog("[Atacante] Intercepta o tráfego: pode ler, registrar ou alterar os dados antes de repassar (Man-in-the-Middle).","warn");
+  await mitmMove("ATK","GW","Dados repassados → gateway real","var(--accent-2)");
+  mitmLog("✓ O atacante ficou 'no meio' de toda a comunicação, sem que PC ou gateway percebessem.","rt");
+}
+var mitmNormalBtn = document.getElementById("mitmNormal");
+var mitmAttackBtn = document.getElementById("mitmAttack");
+if(mitmNormalBtn) mitmNormalBtn.addEventListener("click", function(){
+  if(mitmRunning) return; mitmSetRunning(true);
+  mitmNormalScenario().then(function(){ mitmSetRunning(false); });
+});
+if(mitmAttackBtn) mitmAttackBtn.addEventListener("click", function(){
+  if(mitmRunning) return; mitmSetRunning(true);
+  mitmAttackScenario().then(function(){ mitmSetRunning(false); });
+});
+renderMitmTopo();
+
+/* ============================ WI-FI CHANNEL SIMULATOR ============================ */
+var CHAN_COLORS = {A:"var(--accent)", B:"var(--accent-2)", C:"var(--lvl-avancado)"};
+var chanState = {A:1, B:4, C:8};
+function renderChanControls(){
+  var el = document.getElementById("chanControls");
+  if(!el) return;
+  el.innerHTML = ["A","B","C"].map(function(k){
+    var opts = "";
+    for(var i=1;i<=11;i++){ opts += '<option value="'+i+'"'+(chanState[k]===i?" selected":"")+'>Canal '+i+'</option>'; }
+    return '<div class="field small"><label style="color:'+CHAN_COLORS[k]+'">AP-'+k+'</label>'+
+      '<select data-ap="'+k+'" style="padding:7px 9px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--fg);font:inherit;font-size:13px">'+opts+'</select></div>';
+  }).join("");
+  el.querySelectorAll("select").forEach(function(sel){
+    sel.addEventListener("change", function(){ chanState[sel.dataset.ap] = parseInt(sel.value,10); renderChanStrip(); });
+  });
+}
+function renderChanStrip(){
+  var strip = document.getElementById("chanStrip");
+  if(!strip) return;
+  var footprints = {};
+  ["A","B","C"].forEach(function(k){
+    var c = chanState[k];
+    footprints[k] = [];
+    for(var i=Math.max(1,c-2); i<=Math.min(11,c+2); i++){ footprints[k].push(i); }
+  });
+  var html = '<div style="display:flex;gap:3px">';
+  for(var ch=1; ch<=11; ch++){
+    var covering = ["A","B","C"].filter(function(k){ return footprints[k].indexOf(ch)>-1; });
+    var conflict = covering.length>1;
+    html += '<div style="flex:1;min-width:0;text-align:center">'+
+      '<div style="height:46px;border-radius:6px;border:'+(conflict?"2px solid var(--bad)":"1px solid var(--border)")+';background:var(--surface);display:flex;flex-direction:column;overflow:hidden">'+
+        covering.map(function(k){ return '<div style="flex:1;background:'+CHAN_COLORS[k]+';opacity:'+(chanState[k]===ch?"0.9":"0.35")+'"></div>'; }).join("")+
+      '</div><div style="font-size:10px;color:var(--fg-muted);margin-top:3px;font-family:\'IBM Plex Mono\'">'+ch+'</div></div>';
+  }
+  html += '</div>';
+  strip.innerHTML = html;
+  var pairs = {};
+  for(var ch2=1; ch2<=11; ch2++){
+    var cov2 = ["A","B","C"].filter(function(k){ return footprints[k].indexOf(ch2)>-1; });
+    if(cov2.length>1) pairs[cov2.join("+")] = true;
+  }
+  var result = document.getElementById("chanResult");
+  if(!result) return;
+  if(!Object.keys(pairs).length){
+    result.innerHTML = "<b style='color:var(--good)'>✓ Sem sobreposição!</b> Esses canais não interferem entre si — exatamente por isso 1, 6 e 11 são a combinação recomendada para 3 redes próximas.";
+  } else {
+    result.innerHTML = "<b style='color:var(--bad)'>⚠ Sobreposição detectada</b> entre "+Object.keys(pairs).map(function(p){return "AP-"+p.replace("+"," e AP-");}).join(", ")+" — essas redes competem pelo mesmo espectro e perdem desempenho por interferência mútua.";
+  }
+}
+renderChanControls();
+renderChanStrip();
+
+initFlow("wifiFlow",
+  [{ico:"📱",label:"Dispositivo"},{ico:"📶",label:"Roteador (AP)"}],
+  [
+    {active:[0,1],msg:"Beacon / Probe",desc:"O roteador anuncia o SSID (ou o dispositivo pergunta 'quem está por aqui?' com um Probe Request). O dispositivo descobre a rede e suas capacidades de segurança (WPA2/WPA3)."},
+    {active:[0,1],msg:"Autenticação (Open System)",desc:"Nas redes modernas, essa etapa é só uma formalidade de identificação — a segurança de verdade vem na troca de chaves, mais adiante."},
+    {active:[0,1],msg:"Associação",desc:"O dispositivo pede para 'entrar' formalmente na rede, e o roteador reserva um identificador de associação para ele."},
+    {active:[0,1],msg:"4-way handshake (WPA2) / SAE (WPA3)",desc:"Dispositivo e roteador provam, cada um, que conhecem a senha — sem nunca transmiti-la — e derivam juntos uma chave de criptografia única para essa sessão."},
+    {active:[0,1],msg:"✓ Conectado e criptografado",desc:"A partir daqui, todo o tráfego entre o dispositivo e o roteador é criptografado com a chave gerada na etapa anterior."}
+  ]
+);
+
+/* ============================ CABLE WIDGET ============================ */
+var CABLE = {
+  a:[["1","Branco/Verde","#16a34a"],["2","Verde","#16a34a"],["3","Branco/Laranja","#ea580c"],["4","Azul","#2563eb"],["5","Branco/Azul","#2563eb"],["6","Laranja","#ea580c"],["7","Branco/Marrom","#78350f"],["8","Marrom","#78350f"]],
+  b:[["1","Branco/Laranja","#ea580c"],["2","Laranja","#ea580c"],["3","Branco/Verde","#16a34a"],["4","Azul","#2563eb"],["5","Branco/Azul","#2563eb"],["6","Verde","#16a34a"],["7","Branco/Marrom","#78350f"],["8","Marrom","#78350f"]]
+};
+var cableSeg = document.getElementById("cableSeg");
+cableSeg.innerHTML = '<button data-s="a" class="on">T568A</button><button data-s="b">T568B</button>';
+function renderCable(std){
+  document.getElementById("cablePins").innerHTML = CABLE[std].map(function(p){
+    return '<div class="pin"><span class="n">'+p[0]+'</span><span class="sw" style="background:'+p[2]+(p[1].indexOf("Branco")===0?",linear-gradient(90deg,#fff 50%,transparent 50%)":"")+'"></span><span class="w">'+p[1]+'</span></div>';
+  }).join("");
+}
+cableSeg.addEventListener("click", function(e){
+  var btn = e.target.closest("button"); if(!btn) return;
+  cableSeg.querySelectorAll("button").forEach(function(b){ b.classList.toggle("on", b===btn); });
+  renderCable(btn.dataset.s);
+});
+renderCable("a");
+
+/* ============================ PROTOCOL TABLE ============================ */
+var PROTOCOLS = [
+  ["HTTP","80","TCP","Transferência de páginas web, sem criptografia"],
+  ["HTTPS","443","TCP","HTTP com criptografia TLS/SSL"],
+  ["FTP","20/21","TCP","Transferência de arquivos (dados/controle)"],
+  ["SSH","22","TCP","Acesso remoto seguro a linha de comando"],
+  ["Telnet","23","TCP","Acesso remoto sem criptografia — evite usar"],
+  ["SMTP","25","TCP","Envio de e-mails entre servidores"],
+  ["DNS","53","TCP/UDP","Resolução de nomes de domínio para IP"],
+  ["DHCP","67/68","UDP","Atribuição automática de configuração IP"],
+  ["TFTP","69","UDP","Transferência de arquivos simplificada, sem autenticação"],
+  ["POP3","110","TCP","Baixa e-mails do servidor para o cliente"],
+  ["IMAP","143","TCP","Sincroniza e-mails entre cliente e servidor"],
+  ["SNMP","161/162","UDP","Monitoramento e gerenciamento de equipamentos de rede"],
+  ["LDAP","389","TCP","Consulta a diretórios (ex.: Active Directory)"],
+  ["SMTPS","465","TCP","SMTP com criptografia"],
+  ["IMAPS","993","TCP","IMAP com criptografia"],
+  ["POP3S","995","TCP","POP3 com criptografia"],
+  ["NTP","123","UDP","Sincronização de horário entre dispositivos"],
+  ["SMB","445","TCP","Compartilhamento de arquivos/impressoras (Windows)"],
+  ["RDP","3389","TCP","Acesso remoto gráfico a desktops Windows"],
+  ["MySQL","3306","TCP","Conexão com banco de dados MySQL"],
+  ["PostgreSQL","5432","TCP","Conexão com banco de dados PostgreSQL"],
+  ["SIP","5060","TCP/UDP","Sinalização de chamadas de voz/vídeo (VoIP)"]
+];
+function renderProto(filter){
+  var body = document.getElementById("protoBody");
+  var f = (filter||"").toLowerCase();
+  body.innerHTML = PROTOCOLS.filter(function(r){ return r.join(" ").toLowerCase().indexOf(f)>-1; }).map(function(r){
+    var tclass = r[2].toLowerCase().indexOf("tcp")>-1 ? "tcp":"udp";
+    return "<tr><td><b>"+r[0]+"</b></td><td>"+r[1]+"</td><td><span class='tag "+tclass+"'>"+r[2]+"</span></td><td style='white-space:normal'>"+r[3]+"</td></tr>";
+  }).join("");
+}
+document.getElementById("protoSearch").addEventListener("input", function(e){ renderProto(e.target.value); });
+renderProto("");
+
+/* ============================ GLOSSARY ============================ */
+var GLOSS = [
+  ["ARP","Protocolo que descobre o MAC correspondente a um IP na rede local."],
+  ["Backbone","Infraestrutura de alta capacidade que interliga grandes redes/provedores."],
+  ["Bandwidth (banda)","Capacidade máxima de transmissão de um enlace, em bits por segundo."],
+  ["Broadcast","Envio de dados para todos os dispositivos de um domínio de rede."],
+  ["BGP","Protocolo de roteamento entre sistemas autônomos — a espinha dorsal da internet."],
+  ["CIDR","Notação de máscara por prefixo (ex.: /24), substituindo as classes fixas."],
+  ["DHCP","Protocolo que atribui automaticamente IP e configurações de rede."],
+  ["DNS","Sistema que traduz nomes de domínio em endereços IP."],
+  ["Domínio de colisão","Segmento de rede onde quadros podem colidir se enviados ao mesmo tempo."],
+  ["Endereço de broadcast","Último endereço de uma sub-rede, usado para alcançar todos os hosts dela."],
+  ["Endereço de rede","Primeiro endereço de uma sub-rede, identifica a rede em si (não um host)."],
+  ["Firewall","Dispositivo/software que filtra tráfego com base em regras de segurança."],
+  ["Full-duplex","Transmissão simultânea nos dois sentidos."],
+  ["Gateway padrão","Endereço para onde um host envia tráfego destinado a fora da sua rede local."],
+  ["Half-duplex","Transmissão em apenas um sentido por vez."],
+  ["IDS/IPS","Sistemas de detecção/prevenção de intrusão em redes."],
+  ["IP","Endereço lógico que identifica um dispositivo numa rede."],
+  ["IPv6","Versão de 128 bits do protocolo IP, sucessora do IPv4."],
+  ["ISP","Provedor de Serviço de Internet (Internet Service Provider)."],
+  ["Jitter","Variação na latência de pacotes consecutivos — crítico para VoIP/vídeo."],
+  ["Última milha","Trecho final da rede entre o provedor e o cliente."],
+  ["Latência","Tempo que um pacote leva para ir de origem a destino."],
+  ["MAC Address","Endereço físico único de 48 bits de uma interface de rede."],
+  ["MTU","Tamanho máximo de um pacote que pode trafegar sem fragmentação."],
+  ["NAT","Tradução de endereços, permitindo IPs privados acessarem a internet pública."],
+  ["OSI","Modelo de referência de 7 camadas para comunicação em redes."],
+  ["OSPF","Protocolo de roteamento dinâmico de estado de enlace."],
+  ["Pacote","Unidade de dados na camada de rede (L3)."],
+  ["PAT","NAT com sobrecarga: vários IPs privados compartilham um único IP público via portas."],
+  ["Ping","Ferramenta que testa conectividade e mede latência usando ICMP."],
+  ["Porta","Número que identifica uma aplicação específica dentro de um host."],
+  ["Protocolo","Conjunto de regras que define como dispositivos se comunicam."],
+  ["QoS","Mecanismos que priorizam certos tipos de tráfego na rede."],
+  ["Quadro (frame)","Unidade de dados na camada de enlace (L2)."],
+  ["RFC 1918","Documento que define as faixas de IP privadas."],
+  ["RIP","Protocolo de roteamento dinâmico de vetor de distância, baseado em saltos."],
+  ["Roteador","Equipamento que encaminha pacotes entre redes diferentes."],
+  ["SDN","Arquitetura que separa o controle da rede do encaminhamento de tráfego."],
+  ["Segmento","Unidade de dados na camada de transporte (L4)."],
+  ["Sub-rede","Divisão lógica de uma rede IP maior em redes menores."],
+  ["Switch","Equipamento de camada 2 que encaminha quadros com base no MAC de destino."],
+  ["TCP","Protocolo de transporte confiável, orientado a conexão."],
+  ["Throughput","Taxa real de dados transmitidos com sucesso, na prática."],
+  ["Topologia","O layout físico ou lógico de como os dispositivos de uma rede se conectam."],
+  ["UDP","Protocolo de transporte rápido, sem garantias de entrega."],
+  ["VLAN","Rede local virtual que segmenta logicamente um switch físico."],
+  ["VPN","Túnel criptografado que estende uma rede privada sobre uma rede pública."],
+  ["WPA3","Protocolo de segurança Wi-Fi atual, sucessor do WPA2."]
+].sort(function(a,b){ return a[0].localeCompare(b[0],"pt-BR"); });
+function renderGloss(filter){
+  var f=(filter||"").toLowerCase();
+  document.getElementById("glossList").innerHTML = GLOSS.filter(function(g){ return g.join(" ").toLowerCase().indexOf(f)>-1; })
+    .map(function(g){ return '<div class="gloss-item"><dt>'+g[0]+'</dt><dd>'+g[1]+'</dd></div>'; }).join("");
+}
+document.getElementById("glossSearch").addEventListener("input", function(e){ renderGloss(e.target.value); });
+renderGloss("");
+
+/* ============================ QUIZ ENGINE ============================ */
+var QUIZZES = {
+  internet:[
+    {q:"O princípio fundamental por trás da internet, herdado da ARPANET, é:",opts:["Um único servidor central controla tudo","Comutação de pacotes — dados divididos e roteados independentemente","Apenas satélites transmitem dados"],correct:1,explain:"A comutação de pacotes permite que a rede sobreviva à perda de qualquer nó, pois os dados seguem rotas independentes."},
+    {q:"Qual meio físico normalmente oferece a menor latência e maior velocidade?",opts:["Linha discada","Satélite","Fibra óptica"],correct:2,explain:"Fibra óptica tem altíssima largura de banda e baixíssima latência comparada a outros meios."},
+    {q:"'A internet não tem um centro' significa que ela é:",opts:["Descentralizada","Controlada por um único país","Impossível de falhar"],correct:0,explain:"Cada operadora/rede mantém sua parte e todas concordam em usar os mesmos protocolos."}
+  ],
+  osi:[
+    {q:"Quantas camadas tem o modelo OSI?",opts:["4","7","5"],correct:1,explain:"O modelo OSI tem 7 camadas, da Física (1) até a Aplicação (7)."},
+    {q:"Em qual camada o endereço IP atua?",opts:["Camada 2 (Enlace)","Camada 3 (Rede)","Camada 7 (Aplicação)"],correct:1,explain:"O endereçamento lógico (IP) e o roteamento acontecem na camada 3, Rede."},
+    {q:"O nome do PDU (unidade de dados) na camada de Transporte é:",opts:["Pacote","Quadro","Segmento"],correct:2,explain:"Na camada 4 (Transporte), a unidade de dados é chamada de segmento."},
+    {q:"TCP/IP condensa as 7 camadas do OSI em quantas camadas?",opts:["4","3","6"],correct:0,explain:"O modelo TCP/IP usa 4 camadas: Aplicação, Transporte, Internet e Acesso à rede."}
+  ],
+  ipv4:[
+    {q:"Qual é a máscara padrão de uma rede classe C?",opts:["255.0.0.0","255.255.0.0","255.255.255.0"],correct:2,explain:"Classe C usa /24, ou seja, 255.255.255.0."},
+    {q:"O endereço 10.5.3.2 pertence a qual tipo de faixa?",opts:["Pública","Privada (RFC 1918)","Loopback"],correct:1,explain:"Toda a faixa 10.0.0.0/8 é reservada para uso privado pela RFC 1918."},
+    {q:"Em uma sub-rede /30, quantos hosts utilizáveis existem?",opts:["4","2","30"],correct:1,explain:"/30 tem 4 endereços totais, menos rede e broadcast = 2 hosts utilizáveis — comum em links ponto a ponto."},
+    {q:"O endereço de broadcast de uma sub-rede é aquele onde:",opts:["Todos os bits de host são 0","Todos os bits de host são 1","Todos os bits são 1, incluindo os de rede"],correct:1,explain:"Broadcast = parte de rede fixa + todos os bits de host em 1."}
+  ],
+  ipv6:[
+    {q:"Quantos bits tem um endereço IPv6?",opts:["32","64","128"],correct:2,explain:"IPv6 usa 128 bits, contra os 32 bits do IPv4."},
+    {q:"O que o '::' representa em um endereço IPv6?",opts:["Um único bloco de zeros abreviado","O fim do endereço","Um erro de digitação"],correct:0,explain:"'::' substitui um (único) bloco consecutivo de grupos zerados."},
+    {q:"Endereços que começam com fe80:: são do tipo:",opts:["Multicast","Link-local","Loopback"],correct:1,explain:"fe80::/10 é a faixa reservada para endereços link-local, válidos só no enlace local."}
+  ],
+  mac:[
+    {q:"Quantos bits tem um endereço MAC?",opts:["32","48","64"],correct:1,explain:"MAC Address tem 48 bits, escritos em 6 pares hexadecimais."},
+    {q:"Os primeiros 3 bytes de um MAC identificam:",opts:["O fabricante (OUI)","O país","O protocolo usado"],correct:0,explain:"OUI (Organizationally Unique Identifier) é atribuído pelo IEEE a cada fabricante."},
+    {q:"Qual protocolo resolve um IP para o MAC correspondente na rede local?",opts:["DNS","ARP","DHCP"],correct:1,explain:"ARP (Address Resolution Protocol) faz essa tradução IP → MAC."}
+  ],
+  topologias:[
+    {q:"Na topologia estrela, se o concentrador central falha:",opts:["Nada acontece","Só um dispositivo é afetado","Toda a rede para"],correct:2,explain:"O hub/switch central é o ponto único de falha da topologia estrela."},
+    {q:"Qual topologia é considerada a mais resiliente a falhas?",opts:["Barramento","Anel simples","Malha (mesh)"],correct:2,explain:"Na malha completa, cada nó tem conexões diretas com vários outros, eliminando pontos únicos de falha."},
+    {q:"WAN é uma rede que abrange:",opts:["Um único prédio","Uma cidade inteira","Países ou continentes"],correct:2,explain:"WAN (Wide Area Network) cobre grandes distâncias geográficas, como a própria internet."}
+  ],
+  cabeamento:[
+    {q:"UTP significa:",opts:["Universal Twisted Protocol","Unshielded Twisted Pair","Unified Transfer Port"],correct:1,explain:"UTP = Unshielded (sem blindagem) Twisted Pair (par trançado)."},
+    {q:"Um cabo crossover combina:",opts:["T568A nas duas pontas","T568A numa ponta e T568B na outra","Nenhum padrão"],correct:1,explain:"Crossover mistura os dois padrões, uma ponta em cada, para ligar dispositivos iguais."},
+    {q:"Qual meio é imune a interferência eletromagnética?",opts:["Cabo coaxial","Par trançado UTP","Fibra óptica"],correct:2,explain:"Fibra usa luz, não eletricidade, então não sofre interferência eletromagnética."}
+  ],
+  equipamentos:[
+    {q:"Um switch opera principalmente em qual camada OSI?",opts:["1 (Física)","2 (Enlace)","3 (Rede)"],correct:1,explain:"Switches encaminham com base no endereço MAC, que é da camada 2."},
+    {q:"Diferente do hub, o switch:",opts:["Envia tudo para todas as portas","Aprende MACs e envia só para a porta certa","Não tem portas"],correct:1,explain:"O switch mantém uma tabela MAC por porta (CAM table) e direciona o tráfego."},
+    {q:"Qual equipamento opera na camada 3 e decide rotas entre redes?",opts:["Hub","Roteador","Repetidor"],correct:1,explain:"O roteador usa o endereço IP (camada 3) para encaminhar pacotes entre redes diferentes."}
+  ],
+  protocolos:[
+    {q:"Qual protocolo garante entrega confiável e ordenada dos dados?",opts:["UDP","TCP","ICMP"],correct:1,explain:"TCP é orientado a conexão e garante entrega e ordem, reenviando pacotes perdidos."},
+    {q:"A porta padrão do HTTPS é:",opts:["80","443","21"],correct:1,explain:"HTTPS usa a porta 443 por padrão."},
+    {q:"DNS normalmente usa qual protocolo de transporte?",opts:["Somente TCP","Somente UDP","TCP e UDP"],correct:2,explain:"DNS usa UDP para a maioria das consultas (mais rápido) e TCP para transferências maiores (como zone transfers)."},
+    {q:"No three-way handshake do TCP, a ordem correta é:",opts:["ACK, SYN, SYN-ACK","SYN, SYN-ACK, ACK","SYN-ACK, SYN, ACK"],correct:1,explain:"O cliente envia SYN, o servidor responde SYN-ACK, e o cliente confirma com ACK."}
+  ],
+  "dns-dhcp-nat":[
+    {q:"A sigla DORA do processo DHCP representa:",opts:["Discover, Offer, Request, Acknowledge","Data, Order, Response, ACK","Domain, Open, Route, Assign"],correct:0,explain:"DORA: Discover → Offer → Request → Acknowledge."},
+    {q:"Qual recurso evita que toda consulta DNS percorra a árvore inteira novamente?",opts:["NAT","Cache (com TTL)","VLAN"],correct:1,explain:"Respostas DNS ficam em cache por um tempo (TTL), evitando consultas repetidas."},
+    {q:"PAT (NAT overload) permite que:",opts:["Cada host tenha seu próprio IP público fixo","Vários hosts privados compartilhem um único IP público via portas","Não seja necessário IP algum"],correct:1,explain:"PAT diferencia os hosts pela porta de origem, permitindo compartilhar um único IP público."}
+  ],
+  roteamento:[
+    {q:"Qual protocolo de roteamento é usado entre provedores de internet (sistemas autônomos)?",opts:["RIP","OSPF","BGP"],correct:2,explain:"BGP é o protocolo de vetor de caminho que roteia o tráfego entre ASes na internet."},
+    {q:"O principal objetivo do Spanning Tree Protocol (STP) é:",opts:["Aumentar a velocidade da rede","Evitar loops de camada 2","Criptografar o tráfego"],correct:1,explain:"STP bloqueia caminhos redundantes para impedir loops e tempestades de broadcast."},
+    {q:"Uma VLAN serve para:",opts:["Aumentar a velocidade do cabo","Segmentar logicamente uma rede física em várias redes isoladas","Substituir o roteador"],correct:1,explain:"VLANs dividem um switch físico em domínios de broadcast separados logicamente."}
+  ],
+  laboratorio:[
+    {q:"No laboratório, por que o switch 'inunda' (flood) o DHCPDISCOVER para toda a VLAN?",opts:["Porque o switch está com defeito","Porque é um broadcast e o switch ainda não sabe em qual porta está o servidor DHCP","Porque é mais rápido que enviar direto"],correct:1,explain:"DHCPDISCOVER é enviado em broadcast — PC-A ainda não tem IP nem conhece o servidor — então o switch inunda a VLAN inteira, como faz com qualquer broadcast."},
+    {q:"O que a NAT troca na etapa de acesso à internet?",opts:["O IP privado de origem pelo IP público do roteador","O IP de destino do servidor","O endereço MAC de PC-A"],correct:0,explain:"PAT/NAT overload traduz IP:porta privados para IP:porta públicos do roteador, e desfaz a tradução na resposta."},
+    {q:"Por que PC-A não consegue falar diretamente com PC-C através do switch?",opts:["Porque o cabo está com defeito","Porque estão em VLANs diferentes, e o switch não encaminha entre VLANs","Porque PC-C está desligado"],correct:1,explain:"VLANs diferentes são domínios de broadcast isolados — só um roteador (ou switch de camada 3) pode interligá-las."},
+    {q:"O que permite ao roteador rotear entre VLAN 10 e VLAN 20 usando uma única porta física?",opts:["Sub-interfaces 802.1Q (router-on-a-stick)","Um segundo cabo de rede escondido","O protocolo ARP"],correct:0,explain:"Router-on-a-stick usa uma porta física com sub-interfaces marcadas por VLAN (802.1Q), cada uma atuando como gateway de uma VLAN."}
+  ],
+  seguranca:[
+    {q:"Um firewall stateful, diferente do stateless, decide com base em:",opts:["Apenas o IP de origem","O estado da conexão inteira","A cor do pacote"],correct:1,explain:"Firewalls stateful acompanham o estado da conexão, permitindo só respostas a conexões legítimas."},
+    {q:"ARP spoofing é um tipo de ataque:",opts:["De força bruta em senhas","Man-in-the-middle, se passando por outro dispositivo na rede local","De negação de serviço distribuído"],correct:1,explain:"ARP spoofing falsifica respostas ARP para interceptar tráfego de outros dispositivos."},
+    {q:"A diferença entre IDS e IPS é que o IPS:",opts:["Apenas alerta","Bloqueia ativamente a ameaça","Não existe na prática"],correct:1,explain:"IDS detecta e alerta; IPS detecta e bloqueia em tempo real."},
+    {q:"Num firewall com regras avaliadas em ordem, o que acontece com um pacote que não combina com nenhuma regra explícita?",opts:["É permitido por padrão","Aplica-se a regra implícita final, normalmente bloqueando (negação padrão)","O firewall trava"],correct:1,explain:"A maioria dos firewalls aplica uma política padrão de negar tudo que não foi explicitamente permitido antes."},
+    {q:"No ataque de ARP spoofing, o que o atacante falsifica?",opts:["O endereço IP do PC","A resposta ARP, fazendo a vítima acreditar que o atacante é o gateway","O cabo de rede"],correct:1,explain:"O atacante envia respostas ARP forjadas associando o IP do gateway ao seu próprio MAC, envenenando o cache ARP da vítima."}
+  ],
+  wireless:[
+    {q:"Qual padrão Wi-Fi é também chamado de Wi-Fi 6?",opts:["802.11ac","802.11ax","802.11n"],correct:1,explain:"802.11ax recebeu o nome comercial Wi-Fi 6 (e 6E na versão de 6 GHz)."},
+    {q:"Quais canais de 2,4 GHz não se sobrepõem entre si?",opts:["1, 6 e 11","2, 5 e 9","Todos se sobrepõem"],correct:0,explain:"Apenas os canais 1, 6 e 11 são totalmente não sobrepostos na faixa de 2,4 GHz."},
+    {q:"Qual é o protocolo de segurança Wi-Fi mais atual e seguro?",opts:["WEP","WPA2","WPA3"],correct:2,explain:"WPA3 é o padrão atual, mais resistente a ataques de força bruta offline."},
+    {q:"Por que os canais 1, 6 e 11 (em 2,4GHz) não interferem entre si?",opts:["Porque são canais exclusivos para empresas","Porque a faixa que cada um ocupa não se sobrepõe à dos outros dois","Porque usam frequência de 5GHz"],correct:1,explain:"Cada canal 2,4GHz ocupa uma faixa de espectro larga; só 1, 6 e 11 têm espaçamento suficiente para não se sobrepor entre si."},
+    {q:"Durante o handshake de conexão Wi-Fi (WPA2/WPA3), a senha da rede:",opts:["É transmitida em texto puro pelo ar","Nunca é transmitida diretamente — o handshake prova que ambos a conhecem sem enviá-la","Só é usada em redes WEP"],correct:1,explain:"O 4-way handshake (WPA2) e o SAE (WPA3) derivam chaves de criptografia comprovando conhecimento da senha sem jamais transmiti-la pela rede."}
+  ],
+  avancado:[
+    {q:"SDN separa a rede em quais dois planos?",opts:["Controle e dados","Público e privado","Rápido e lento"],correct:0,explain:"SDN centraliza o plano de controle, deixando os equipamentos só executarem o encaminhamento (plano de dados)."},
+    {q:"Qual comando mostra cada roteador no caminho até um destino?",opts:["ping","tracert/traceroute","ipconfig"],correct:1,explain:"Traceroute/tracert revela cada salto (hop) até o destino."},
+    {q:"Dual stack, na transição para IPv6, significa:",opts:["Rodar IPv4 e IPv6 ao mesmo tempo na mesma interface","Usar dois roteadores físicos","Desligar o IPv4 totalmente"],correct:0,explain:"Dual stack mantém IPv4 e IPv6 funcionando simultaneamente durante a transição."}
+  ]
+};
+
+function buildQuizzes(){
+  Object.keys(QUIZZES).forEach(function(modId){
+    var container = document.getElementById("quiz-"+modId);
+    if(!container) return;
+    var qs = QUIZZES[modId];
+    var answered = 0, score = 0;
+    var scoreEl = document.getElementById("score-"+modId);
+    function updateScore(){
+      scoreEl.textContent = answered>0 ? ("Pontuação: "+score+"/"+qs.length) : "";
+      if(answered===qs.length){
+        progress[modId] = progress[modId] || {};
+        progress[modId].quiz = {score:score,total:qs.length};
+        saveProgress(progress);
+        renderDashboard();
+      }
+    }
+    container.innerHTML = qs.map(function(q,qi){
+      return '<div class="q-block" data-qi="'+qi+'"><div class="q-text">'+(qi+1)+'. '+q.q+'</div><div class="q-opts">'+
+        q.opts.map(function(o,oi){ return '<button class="q-opt" data-oi="'+oi+'">'+o+'</button>'; }).join("")+
+        '</div><div class="q-explain" hidden></div></div>';
+    }).join("");
+    container.querySelectorAll(".q-block").forEach(function(block){
+      var qi = +block.dataset.qi, q = qs[qi];
+      block.querySelectorAll(".q-opt").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var oi = +btn.dataset.oi;
+          block.querySelectorAll(".q-opt").forEach(function(b){ b.disabled = true; });
+          if(oi===q.correct){ btn.classList.add("correct"); score++; }
+          else { btn.classList.add("incorrect"); block.querySelector('.q-opt[data-oi="'+q.correct+'"]').classList.add("correct"); }
+          var ex = block.querySelector(".q-explain"); ex.hidden=false; ex.textContent = q.explain;
+          answered++;
+          updateScore();
+        });
+      });
+    });
+  });
+}
+buildQuizzes();
+
+/* ============================ INIT ============================ */
+updateProgressUI();
+var initial = (location.hash||"").replace("#","");
+showModule(MODULES.some(function(m){return m.id===initial;}) ? initial : "inicio");
+window.addEventListener("hashchange", function(){
+  var h = (location.hash||"").replace("#","");
+  if(MODULES.some(function(m){return m.id===h;})) showModule(h);
+});
+
+})();
+</script>
