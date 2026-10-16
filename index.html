@@ -322,7 +322,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         <div class="hero">
           <div class="eyebrow">Plataforma de estudo · do zero ao avançado</div>
           <h1>Domine redes de computadores</h1>
-          <p class="lede" style="max-width:56ch">Esta é a continuação natural do seu curso de Fundamentos de Redes: aqui você não só lê — você mexe. Calculadora de sub-redes de verdade, animações de como um pacote é montado e viaja, simuladores de topologia e protocolo, e quizzes para fixar cada módulo.</p>
+          <p class="lede" style="max-width:56ch">Esta é a continuação natural do seu curso de Fundamentos de Redes: aqui você não só lê: você mexe. Calculadora de sub-redes de verdade, animações de como um pacote é montado e viaja, simuladores de topologia e protocolo, e quizzes para fixar cada módulo.</p>
           <div class="progress-bar"><i id="heroBar" style="width:0%"></i></div>
           <div class="actions">
             <button class="btn primary" id="continueBtn">Continuar estudando →</button>
@@ -332,8 +332,8 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
 
         <h2>Como usar</h2>
         <div class="grid3">
-          <div class="card"><h3 style="margin-top:0">1. Leia e interaja</h3><p style="font-size:13.5px;color:var(--fg-muted);margin:0">Cada módulo tem simuladores — clique, digite, arraste os controles. Você aprende fazendo, não só lendo.</p></div>
-          <div class="card"><h3 style="margin-top:0">2. Faça o quiz</h3><p style="font-size:13.5px;color:var(--fg-muted);margin:0">No fim de cada módulo há perguntas com feedback imediato e explicação — erre, entenda o porquê, acerte de novo.</p></div>
+          <div class="card"><h3 style="margin-top:0">1. Leia e interaja</h3><p style="font-size:13.5px;color:var(--fg-muted);margin:0">Cada módulo tem simuladores: clique, digite, arraste os controles. Você aprende fazendo, não só lendo.</p></div>
+          <div class="card"><h3 style="margin-top:0">2. Faça o quiz</h3><p style="font-size:13.5px;color:var(--fg-muted);margin:0">No fim de cada módulo há perguntas com feedback imediato e explicação: erre, entenda o porquê, acerte de novo.</p></div>
           <div class="card"><h3 style="margin-top:0">3. Marque como concluído</h3><p style="font-size:13.5px;color:var(--fg-muted);margin:0">Seu progresso fica salvo neste navegador. Volte quando quiser e continue de onde parou.</p></div>
         </div>
 
@@ -348,7 +348,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         <p class="lede">Antes de qualquer protocolo ou endereço, entenda o quadro geral: a internet é uma rede de redes, conectando milhões de redes menores através de cabos, rádio e satélites, todas conversando com as mesmas regras.</p>
 
         <h2>Da ARPANET à internet global</h2>
-        <p>Nos anos 1960, a <b>ARPANET</b> (projeto do Departamento de Defesa dos EUA) provou que uma rede podia sobreviver à perda de qualquer nó individual, dividindo mensagens em pacotes que viajam por rotas independentes. Esse princípio — <b>comutação de pacotes</b> — é a base de tudo que veio depois. Quando o conjunto de protocolos <b>TCP/IP</b> se tornou padrão nos anos 1980 e redes acadêmicas e comerciais passaram a se interligar, nasceu a "rede das redes" que chamamos de internet.</p>
+        <p>Nos anos 1960, a <b>ARPANET</b> (projeto do Departamento de Defesa dos EUA) provou que uma rede podia sobreviver à perda de qualquer nó individual, dividindo mensagens em pacotes que viajam por rotas independentes. Esse princípio, a <b>comutação de pacotes</b>, é a base de tudo que veio depois. Quando o conjunto de protocolos <b>TCP/IP</b> se tornou padrão nos anos 1980 e redes acadêmicas e comerciais passaram a se interligar, nasceu a "rede das redes" que chamamos de internet.</p>
 
         <div class="callout tip"><div class="ic">i</div><div>A internet não tem um "centro". Ela é descentralizada por natureza: cada operadora, universidade ou provedor mantém seu pedaço, e todos concordam em usar os mesmos protocolos para trocar tráfego entre si.</div></div>
 
@@ -407,7 +407,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         </table></div>
 
         <h2>Encapsulamento: como um dado vira um sinal elétrico</h2>
-        <p>Quando você envia uma mensagem, cada camada (de cima para baixo) adiciona seu próprio "envelope" (cabeçalho) ao redor dos dados da camada acima — isso é <b>encapsulamento</b>. No destino, o processo é desfeito camada por camada (<b>desencapsulamento</b>). Clique para montar o pacote camada a camada:</p>
+        <p>Quando você envia uma mensagem, cada camada (de cima para baixo) adiciona seu próprio "envelope" (cabeçalho) ao redor dos dados da camada acima: isso é <b>encapsulamento</b>. No destino, o processo é desfeito camada por camada (<b>desencapsulamento</b>). Clique para montar o pacote camada a camada:</p>
         <div class="panel">
           <div class="encap-wrap" id="encapWrap"></div>
           <div class="actions" style="justify-content:center;margin-top:14px">
@@ -441,13 +441,13 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
           <tr><td>A</td><td>1 – 126</td><td class="mono">255.0.0.0 /8</td><td>Poucas redes, milhões de hosts (grandes corporações)</td></tr>
           <tr><td>B</td><td>128 – 191</td><td class="mono">255.255.0.0 /16</td><td>Redes médias</td></tr>
           <tr><td>C</td><td>192 – 223</td><td class="mono">255.255.255.0 /24</td><td>Redes pequenas (mais comum hoje)</td></tr>
-          <tr><td>D</td><td>224 – 239</td><td>—</td><td>Multicast</td></tr>
-          <tr><td>E</td><td>240 – 255</td><td>—</td><td>Experimental/reservado</td></tr>
+          <tr><td>D</td><td>224 – 239</td><td>N/A</td><td>Multicast</td></tr>
+          <tr><td>E</td><td>240 – 255</td><td>N/A</td><td>Experimental/reservado</td></tr>
         </table></div>
-        <div class="callout warn"><div class="ic">!</div><div><b>127.x.x.x</b> é reservado para <b>loopback</b> (o próprio computador — "localhost"). E hoje o roteamento real usa <b>CIDR</b> (máscaras de tamanho variável), não as classes fixas — elas sobrevivem só como referência didática.</div></div>
+        <div class="callout warn"><div class="ic">!</div><div><b>127.x.x.x</b> é reservado para <b>loopback</b> (o próprio computador, "localhost"). E hoje o roteamento real usa <b>CIDR</b> (máscaras de tamanho variável), não as classes fixas: elas sobrevivem só como referência didática.</div></div>
 
         <h2>Público x Privado</h2>
-        <p>Endereços <b>privados</b> (definidos na RFC 1918) não são roteáveis na internet pública — servem para redes internas, e o roteador faz <b>NAT</b> para traduzi-los a um IP público na saída (veja o módulo 10).</p>
+        <p>Endereços <b>privados</b> (definidos na RFC 1918) não são roteáveis na internet pública: servem para redes internas, e o roteador faz <b>NAT</b> para traduzi-los a um IP público na saída (veja o módulo 10).</p>
         <div class="table-wrap"><table>
           <tr><th>Faixa privada</th><th>Classe original</th><th>Hosts possíveis</th></tr>
           <tr><td class="mono">10.0.0.0 – 10.255.255.255</td><td>A</td><td>~16,7 milhões</td></tr>
@@ -456,7 +456,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         </table></div>
 
         <h2>Simulador: calculadora de sub-rede</h2>
-        <p>Digite um IP e um prefixo CIDR — o cálculo é feito ao vivo, igual uma ferramenta profissional:</p>
+        <p>Digite um IP e um prefixo CIDR: o cálculo é feito ao vivo, igual uma ferramenta profissional:</p>
         <div class="panel">
           <div class="calc-row">
             <div class="field"><label>Endereço IP</label><input id="subIp" value="192.168.10.130" class="mono"></div>
@@ -482,7 +482,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
       <section class="module" id="mod-ipv6" hidden>
         <div class="eyebrow"><span class="badge intermediario">Intermediário</span><span>Módulo 4 · ~10 min</span></div>
         <h1>IPv6</h1>
-        <p class="lede">O IPv4 tem "apenas" ~4,3 bilhões de endereços — insuficiente para um planeta cheio de celulares, sensores e dispositivos IoT. O <b>IPv6</b> resolve isso com 128 bits, um espaço de endereços astronomicamente maior.</p>
+        <p class="lede">O IPv4 tem "apenas" ~4,3 bilhões de endereços: insuficiente para um planeta cheio de celulares, sensores e dispositivos IoT. O <b>IPv6</b> resolve isso com 128 bits, um espaço de endereços astronomicamente maior.</p>
 
         <h2>Formato</h2>
         <p>Um endereço IPv6 é escrito em 8 grupos de 4 dígitos hexadecimais, separados por dois-pontos:</p>
@@ -503,13 +503,13 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
 
         <h2>Tipos de endereço IPv6</h2>
         <ul class="tidy">
-          <li><b>Unicast global</b> — roteável na internet, equivalente ao IP público (começa geralmente com 2000::/3).</li>
-          <li><b>Link-local</b> — válido só no enlace local, sempre começa com <span class="mono">fe80::</span>, usado para descoberta de vizinhos.</li>
-          <li><b>Multicast</b> — entrega a um grupo de interfaces, começa com <span class="mono">ff00::/8</span>.</li>
-          <li><b>Unique local</b> — equivalente aos IPs privados do IPv4, faixa <span class="mono">fc00::/7</span>.</li>
+          <li><b>Unicast global</b>: roteável na internet, equivalente ao IP público (começa geralmente com 2000::/3).</li>
+          <li><b>Link-local</b>: válido só no enlace local, sempre começa com <span class="mono">fe80::</span>, usado para descoberta de vizinhos.</li>
+          <li><b>Multicast</b>: entrega a um grupo de interfaces, começa com <span class="mono">ff00::/8</span>.</li>
+          <li><b>Unique local</b>: equivalente aos IPs privados do IPv4, faixa <span class="mono">fc00::/7</span>.</li>
         </ul>
 
-        <div class="callout tip"><div class="ic">i</div><div>Transição: a maioria das redes hoje roda em <b>dual stack</b> (IPv4 e IPv6 simultâneos). Mecanismos como <b>NAT64</b> e túneis permitem que redes só-IPv6 alcancem serviços que só têm IPv4 — veja o módulo 14.</div></div>
+        <div class="callout tip"><div class="ic">i</div><div>Transição: a maioria das redes hoje roda em <b>dual stack</b> (IPv4 e IPv6 simultâneos). Mecanismos como <b>NAT64</b> e túneis permitem que redes só-IPv6 alcancem serviços que só têm IPv4: veja o módulo 14.</div></div>
 
         <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-ipv6"></span></div><div id="quiz-ipv6"></div></div>
         <div class="actions" style="margin-top:18px"><button class="btn primary done-btn" data-mod="ipv6">Marcar módulo como concluído</button></div>
@@ -519,18 +519,18 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
       <section class="module" id="mod-mac" hidden>
         <div class="eyebrow"><span class="badge basico">Básico</span><span>Módulo 5 · ~10 min</span></div>
         <h1>Endereço MAC e Ethernet</h1>
-        <p class="lede">Enquanto o IP identifica "em que rede" um dispositivo está, o <b>MAC Address</b> identifica fisicamente a placa de rede — é único no mundo e gravado de fábrica.</p>
+        <p class="lede">Enquanto o IP identifica "em que rede" um dispositivo está, o <b>MAC Address</b> identifica fisicamente a placa de rede: é único no mundo e gravado de fábrica.</p>
 
         <h2>Estrutura do endereço MAC</h2>
         <p>48 bits, escritos em 6 pares hexadecimais separados por dois-pontos ou traço:</p>
         <div class="card" style="text-align:center">
           <div class="mono" style="font-size:16px">00:1A:2B : 3C:4D:5E</div>
           <div style="display:flex;justify-content:center;gap:26px;margin-top:8px;font-size:12px;color:var(--fg-muted)">
-            <span><b style="color:var(--accent)">00:1A:2B</b> — OUI (fabricante)</span>
-            <span><b style="color:var(--accent-2)">3C:4D:5E</b> — número de série da placa</span>
+            <span><b style="color:var(--accent)">00:1A:2B</b>: OUI (fabricante)</span>
+            <span><b style="color:var(--accent-2)">3C:4D:5E</b>: número de série da placa</span>
           </div>
         </div>
-        <p>Os 3 primeiros bytes (<b>OUI</b> — Organizationally Unique Identifier) são registrados pelo IEEE e identificam o fabricante; os 3 últimos são definidos pelo próprio fabricante, garantindo unicidade.</p>
+        <p>Os 3 primeiros bytes (<b>OUI</b>: Organizationally Unique Identifier) são registrados pelo IEEE e identificam o fabricante; os 3 últimos são definidos pelo próprio fabricante, garantindo unicidade.</p>
 
         <h2>MAC x IP</h2>
         <div class="table-wrap"><table>
@@ -542,7 +542,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         </table></div>
 
         <h2>ARP: a ponte entre IP e MAC</h2>
-        <p>Para enviar um quadro Ethernet, o dispositivo precisa do MAC do destino — mas normalmente só sabe o IP. O protocolo <b>ARP</b> (Address Resolution Protocol) resolve isso: ele envia um <i>broadcast</i> "quem tem o IP X.X.X.X?" na rede local, e o dono responde com seu MAC. Esse resultado fica em cache (tabela ARP) por um tempo.</p>
+        <p>Para enviar um quadro Ethernet, o dispositivo precisa do MAC do destino. Mas normalmente só sabe o IP. O protocolo <b>ARP</b> (Address Resolution Protocol) resolve isso: ele envia um <i>broadcast</i> "quem tem o IP X.X.X.X?" na rede local, e o dono responde com seu MAC. Esse resultado fica em cache (tabela ARP) por um tempo.</p>
 
         <h2>Quadro Ethernet (visão simplificada)</h2>
         <div class="table-wrap"><table>
@@ -558,14 +558,14 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
       <section class="module" id="mod-topologias" hidden>
         <div class="eyebrow"><span class="badge basico">Básico</span><span>Módulo 6 · ~15 min</span></div>
         <h1>Tipos de rede e topologias</h1>
-        <p class="lede">"Topologia" é o desenho de como os dispositivos se conectam fisicamente ou logicamente. A escolha afeta custo, desempenho e — o mais importante na prática — o que acontece quando algo falha.</p>
+        <p class="lede">"Topologia" é o desenho de como os dispositivos se conectam fisicamente ou logicamente. A escolha afeta custo, desempenho e (o mais importante na prática) o que acontece quando algo falha.</p>
 
         <h2>Classificação por abrangência</h2>
         <div class="grid2">
-          <div class="card"><b>PAN</b> — Personal Area Network<p style="font-size:13px;color:var(--fg-muted);margin:4px 0 0">Alcance de poucos metros. Ex.: Bluetooth entre celular e fone.</p></div>
-          <div class="card"><b>LAN</b> — Local Area Network<p style="font-size:13px;color:var(--fg-muted);margin:4px 0 0">Um prédio ou campus. Ex.: a rede da sua casa ou escritório.</p></div>
-          <div class="card"><b>MAN</b> — Metropolitan Area Network<p style="font-size:13px;color:var(--fg-muted);margin:4px 0 0">Uma cidade inteira. Ex.: rede de uma operadora municipal.</p></div>
-          <div class="card"><b>WAN</b> — Wide Area Network<p style="font-size:13px;color:var(--fg-muted);margin:4px 0 0">Países/continentes. Ex.: a própria internet, ou a rede que liga filiais de uma empresa.</p></div>
+          <div class="card"><b>PAN</b>: Personal Area Network<p style="font-size:13px;color:var(--fg-muted);margin:4px 0 0">Alcance de poucos metros. Ex.: Bluetooth entre celular e fone.</p></div>
+          <div class="card"><b>LAN</b>: Local Area Network<p style="font-size:13px;color:var(--fg-muted);margin:4px 0 0">Um prédio ou campus. Ex.: a rede da sua casa ou escritório.</p></div>
+          <div class="card"><b>MAN</b>: Metropolitan Area Network<p style="font-size:13px;color:var(--fg-muted);margin:4px 0 0">Uma cidade inteira. Ex.: rede de uma operadora municipal.</p></div>
+          <div class="card"><b>WAN</b>: Wide Area Network<p style="font-size:13px;color:var(--fg-muted);margin:4px 0 0">Países/continentes. Ex.: a própria internet, ou a rede que liga filiais de uma empresa.</p></div>
         </div>
 
         <h2>Ponto-a-ponto x Cliente-Servidor</h2>
@@ -577,7 +577,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         </table></div>
 
         <h2>Simulador de topologias</h2>
-        <p>Escolha uma topologia e clique num nó para simular uma falha — veja o que acontece com o resto da rede:</p>
+        <p>Escolha uma topologia e clique num nó para simular uma falha: veja o que acontece com o resto da rede:</p>
         <div class="panel">
           <div class="seg" id="topoSeg"></div>
           <div class="topo-box" style="margin-top:12px"><svg id="topoSvg" viewBox="0 0 400 220"></svg></div>
@@ -585,10 +585,10 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
           <div class="actions" style="margin-top:8px"><button class="btn sm" id="topoReset">↺ Restaurar rede</button></div>
         </div>
         <ul class="tidy">
-          <li><b>Estrela</b> — todos ligados a um concentrador central (switch). Se um cabo/dispositivo cai, só ele é afetado; se o concentrador cai, tudo para. É a topologia física mais usada hoje.</li>
-          <li><b>Barramento</b> — todos compartilham um único cabo. Simples e barato, mas uma ruptura no cabo principal derruba a rede inteira; praticamente em desuso.</li>
-          <li><b>Anel</b> — cada nó liga aos dois vizinhos formando um círculo. Um nó com problema pode interromper a volta inteira (em anéis simples, sem redundância).</li>
-          <li><b>Malha (mesh)</b> — cada nó conecta a vários outros. Altíssima resiliência (a internet e redes mesh Wi-Fi usam essa ideia), mas cara e complexa de cabear fisicamente.</li>
+          <li><b>Estrela</b>: todos ligados a um concentrador central (switch). Se um cabo/dispositivo cai, só ele é afetado; se o concentrador cai, tudo para. É a topologia física mais usada hoje.</li>
+          <li><b>Barramento</b>: todos compartilham um único cabo. Simples e barato, mas uma ruptura no cabo principal derruba a rede inteira; praticamente em desuso.</li>
+          <li><b>Anel</b>: cada nó liga aos dois vizinhos formando um círculo. Um nó com problema pode interromper a volta inteira (em anéis simples, sem redundância).</li>
+          <li><b>Malha (mesh)</b>: cada nó conecta a vários outros. Altíssima resiliência (a internet e redes mesh Wi-Fi usam essa ideia), mas cara e complexa de cabear fisicamente.</li>
         </ul>
 
         <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-topologias"></span></div><div id="quiz-topologias"></div></div>
@@ -599,7 +599,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
       <section class="module" id="mod-cabeamento" hidden>
         <div class="eyebrow"><span class="badge basico">Básico</span><span>Módulo 7 · ~12 min</span></div>
         <h1>Meios de transmissão e cabeamento</h1>
-        <p class="lede">Os dados viajam como sinais — elétricos, luminosos ou de rádio — por meios guiados (cabos) ou não guiados (ar).</p>
+        <p class="lede">Os dados viajam como sinais (elétricos, luminosos ou de rádio) por meios guiados (cabos) ou não guiados (ar).</p>
 
         <h2>Guiados x não guiados</h2>
         <div class="grid2">
@@ -608,7 +608,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         </div>
 
         <h2>Cabo de par trançado: padrões T568A / T568B</h2>
-        <p>É o cabo de rede mais comum (conector RJ-45). A ordem das cores nos 8 pinos segue um padrão para garantir desempenho — veja e compare:</p>
+        <p>É o cabo de rede mais comum (conector RJ-45). A ordem das cores nos 8 pinos segue um padrão para garantir desempenho: veja e compare:</p>
         <div class="panel">
           <div class="seg" id="cableSeg"></div>
           <div class="grid2" style="margin-top:12px">
@@ -616,8 +616,8 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
             <div>
               <h3 style="margin-top:0">Quando usar cada um</h3>
               <ul class="tidy" style="font-size:13px">
-                <li><b>Straight-through</b> (mesmo padrão nas duas pontas): liga dispositivos diferentes — PC ↔ switch, switch ↔ roteador. É o cabo do dia a dia.</li>
-                <li><b>Crossover</b> (T568A numa ponta, T568B na outra): liga dispositivos iguais — PC ↔ PC, switch ↔ switch. Hoje quase todo equipamento tem <i>Auto-MDIX</i> e detecta sozinho, tornando o crossover raramente necessário.</li>
+                <li><b>Straight-through</b> (mesmo padrão nas duas pontas): liga dispositivos diferentes: PC ↔ switch, switch ↔ roteador. É o cabo do dia a dia.</li>
+                <li><b>Crossover</b> (T568A numa ponta, T568B na outra): liga dispositivos iguais: PC ↔ PC, switch ↔ switch. Hoje quase todo equipamento tem <i>Auto-MDIX</i> e detecta sozinho, tornando o crossover raramente necessário.</li>
               </ul>
             </div>
           </div>
@@ -641,7 +641,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
       <section class="module" id="mod-equipamentos" hidden>
         <div class="eyebrow"><span class="badge basico">Básico</span><span>Módulo 8 · ~14 min</span></div>
         <h1>Equipamentos de rede</h1>
-        <p class="lede">Cada equipamento opera numa camada OSI diferente — e isso define exatamente o que ele sabe fazer com o tráfego que passa por ele.</p>
+        <p class="lede">Cada equipamento opera numa camada OSI diferente, e isso define exatamente o que ele sabe fazer com o tráfego que passa por ele.</p>
 
         <div class="table-wrap"><table>
           <tr><th>Equipamento</th><th>Camada OSI</th><th>Função</th></tr>
@@ -656,7 +656,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         </table></div>
 
         <h2>Hub x Switch: a diferença que mais cai em prova</h2>
-        <p>Os dois têm várias portas e "parecem" iguais por fora — mas o comportamento interno é radicalmente diferente. Envie um quadro de PC1 para PC2 e veja:</p>
+        <p>Os dois têm várias portas e "parecem" iguais por fora. Mas o comportamento interno é radicalmente diferente. Envie um quadro de PC1 para PC2 e veja:</p>
         <div class="panel">
           <div class="seg" id="hsSeg"></div>
           <div class="hs-box" style="margin-top:12px"><svg id="hsSvg" viewBox="0 0 400 220"></svg></div>
@@ -664,8 +664,8 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
           <p id="hsResult" style="font-size:13.5px;margin:10px 0 0;min-height:20px"></p>
         </div>
         <ul class="tidy">
-          <li><b>Hub</b>: envia para <i>todas</i> as portas (domínio de colisão único) — ineficiente, inseguro (todo mundo "vê" o tráfego de todo mundo) e hoje praticamente extinto.</li>
-          <li><b>Switch</b>: mantém uma tabela MAC por porta (CAM table) e envia só para o destino certo — cada porta é seu próprio domínio de colisão, muito mais eficiente e seguro.</li>
+          <li><b>Hub</b>: envia para <i>todas</i> as portas (domínio de colisão único): ineficiente, inseguro (todo mundo "vê" o tráfego de todo mundo) e hoje praticamente extinto.</li>
+          <li><b>Switch</b>: mantém uma tabela MAC por porta (CAM table) e envia só para o destino certo: cada porta é seu próprio domínio de colisão, muito mais eficiente e seguro.</li>
         </ul>
         <div class="callout tip"><div class="ic">i</div><div>Quer ver a tabela MAC de um switch sendo montada em tempo real, dentro de uma rede completa com roteador, DHCP e internet? <button class="btn sm" style="margin-left:4px" onclick="redeLabShowModule('laboratorio')">Abrir Laboratório de Rede →</button></div></div>
 
@@ -677,7 +677,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
       <section class="module" id="mod-protocolos" hidden>
         <div class="eyebrow"><span class="badge intermediario">Intermediário</span><span>Módulo 9 · ~15 min</span></div>
         <h1>Protocolos e portas de comunicação</h1>
-        <p class="lede">Uma <b>porta</b> identifica qual aplicação, dentro de um computador com um único IP, deve receber determinado tráfego — de 0 a 65535. As primeiras 1023 são "portas conhecidas" (well-known), reservadas para serviços padrão.</p>
+        <p class="lede">Uma <b>porta</b> identifica qual aplicação, dentro de um computador com um único IP, deve receber determinado tráfego: de 0 a 65535. As primeiras 1023 são "portas conhecidas" (well-known), reservadas para serviços padrão.</p>
 
         <h2>TCP x UDP</h2>
         <div class="table-wrap"><table>
@@ -714,7 +714,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         <h1>DNS, DHCP e NAT</h1>
         <p class="lede">Três serviços invisíveis que tornam a internet usável: tradução de nomes, distribuição automática de IPs e compartilhamento de um único IP público entre vários dispositivos.</p>
 
-        <h2>DNS — Sistema de Nomes de Domínio</h2>
+        <h2>DNS: Sistema de Nomes de Domínio</h2>
         <p>Computadores se entendem por IP, mas humanos preferem nomes. O DNS é a "agenda telefônica" da internet, organizada hierarquicamente. Veja a resolução de <span class="mono">www.exemplo.com</span> passo a passo:</p>
         <div class="panel">
           <div class="flow-actors" id="dnsFlowActors"></div>
@@ -725,9 +725,9 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
             <button class="btn sm primary" id="dnsFlowNext">Próximo →</button>
           </div>
         </div>
-        <p style="font-size:13px;color:var(--fg-muted)">Na prática, o resultado costuma estar em <b>cache</b> no seu próprio computador ou no resolvedor do provedor — então a maioria das consultas nem chega a percorrer a árvore inteira.</p>
+        <p style="font-size:13px;color:var(--fg-muted)">Na prática, o resultado costuma estar em <b>cache</b> no seu próprio computador ou no resolvedor do provedor. Então a maioria das consultas nem chega a percorrer a árvore inteira.</p>
 
-        <h2>DHCP — atribuição automática de IP</h2>
+        <h2>DHCP: atribuição automática de IP</h2>
         <p>Sem DHCP, você teria que configurar IP, máscara, gateway e DNS manualmente em cada dispositivo. O processo tem 4 etapas, conhecido pela sigla <b>DORA</b>:</p>
         <div class="panel">
           <div class="flow-actors" id="dhcpFlowActors"></div>
@@ -739,11 +739,11 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
           </div>
         </div>
 
-        <h2>NAT — Network Address Translation</h2>
-        <p>Como os IPs privados (módulo 3) não são roteáveis na internet, o roteador troca o IP de origem privado pelo seu IP público ao enviar tráfego para fora — e faz o caminho inverso nas respostas.</p>
+        <h2>NAT: Network Address Translation</h2>
+        <p>Como os IPs privados (módulo 3) não são roteáveis na internet, o roteador troca o IP de origem privado pelo seu IP público ao enviar tráfego para fora, e faz o caminho inverso nas respostas.</p>
         <div class="table-wrap"><table>
           <tr><th>Tipo</th><th>Como funciona</th></tr>
-          <tr><td>NAT estático</td><td>Um IP privado sempre mapeado para o mesmo IP público (1:1) — comum para expor um servidor</td></tr>
+          <tr><td>NAT estático</td><td>Um IP privado sempre mapeado para o mesmo IP público (1:1): comum para expor um servidor</td></tr>
           <tr><td>NAT dinâmico</td><td>IPs privados usam, por vez, um IP de um pool de IPs públicos disponíveis</td></tr>
           <tr><td>PAT / NAT overload</td><td>O mais comum em casa: todos os dispositivos compartilham <i>um único</i> IP público, diferenciados pela porta de origem</td></tr>
         </table></div>
@@ -760,7 +760,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         <p class="lede">Aqui entramos no terreno de quem administra redes de verdade: como pacotes encontram caminho entre redes, e como switches organizam o tráfego dentro de uma mesma rede física.</p>
 
         <h2>Tabela de roteamento</h2>
-        <p>Todo roteador mantém uma tabela decidindo, para cada rede de destino, por qual interface/próximo salto enviar o pacote. Quando nenhuma rota específica combina, usa a <b>rota padrão</b> (0.0.0.0/0 — "para qualquer lugar que eu não conheça, manda pro meu provedor").</p>
+        <p>Todo roteador mantém uma tabela decidindo, para cada rede de destino, por qual interface/próximo salto enviar o pacote. Quando nenhuma rota específica combina, usa a <b>rota padrão</b> (0.0.0.0/0: "para qualquer lugar que eu não conheça, manda pro meu provedor").</p>
 
         <h2>Roteamento estático x dinâmico</h2>
         <div class="grid2">
@@ -774,23 +774,23 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
           <tr><td>RIP</td><td>Vetor de distância</td><td>Número de saltos (máx. 15)</td><td>Redes pequenas/didáticas</td></tr>
           <tr><td>OSPF</td><td>Estado de enlace</td><td>Custo (baseado na banda)</td><td>Redes corporativas grandes</td></tr>
           <tr><td>EIGRP</td><td>Híbrido (Cisco)</td><td>Banda, atraso, confiabilidade</td><td>Redes Cisco corporativas</td></tr>
-          <tr><td>BGP</td><td>Vetor de caminho</td><td>Atributos de política/AS-path</td><td>Roteamento entre provedores — "o protocolo que roda a internet"</td></tr>
+          <tr><td>BGP</td><td>Vetor de caminho</td><td>Atributos de política/AS-path</td><td>Roteamento entre provedores: "o protocolo que roda a internet"</td></tr>
         </table></div>
 
-        <h2>VLAN — segmentando uma rede física em várias lógicas</h2>
-        <p>Uma <b>VLAN</b> (Virtual LAN, 802.1Q) divide um switch físico em redes separadas logicamente — dispositivos em VLANs diferentes não se enxergam diretamente, mesmo plugados no mesmo switch, a menos que um roteador (ou switch de camada 3) faça a ponte entre elas. Isso melhora segurança e organização (ex.: VLAN de RH separada da VLAN de visitantes).</p>
+        <h2>VLAN: segmentando uma rede física em várias lógicas</h2>
+        <p>Uma <b>VLAN</b> (Virtual LAN, 802.1Q) divide um switch físico em redes separadas logicamente: dispositivos em VLANs diferentes não se enxergam diretamente, mesmo plugados no mesmo switch, a menos que um roteador (ou switch de camada 3) faça a ponte entre elas. Isso melhora segurança e organização (ex.: VLAN de RH separada da VLAN de visitantes).</p>
         <div class="panel">
           <p style="margin-top:0">Simule: atribua as portas a VLANs e veja quem consegue conversar com quem.</p>
           <div class="grid2" id="vlanPorts"></div>
           <p id="vlanResult" style="font-size:13.5px;margin-top:10px"></p>
         </div>
         <ul class="tidy">
-          <li><b>Porta de acesso (access)</b>: pertence a uma única VLAN — é onde ligam PCs e impressoras.</li>
-          <li><b>Porta tronco (trunk)</b>: carrega tráfego de várias VLANs ao mesmo tempo (usando tags 802.1Q) — liga switches entre si.</li>
+          <li><b>Porta de acesso (access)</b>: pertence a uma única VLAN: é onde ligam PCs e impressoras.</li>
+          <li><b>Porta tronco (trunk)</b>: carrega tráfego de várias VLANs ao mesmo tempo (usando tags 802.1Q): liga switches entre si.</li>
         </ul>
-        <div class="callout tip"><div class="ic">i</div><div>Quer ver na prática por que PCs em VLANs diferentes não se enxergam — e como o roteador resolve isso? <button class="btn sm" style="margin-left:4px" onclick="redeLabShowModule('laboratorio')">Abrir Laboratório de Rede →</button></div></div>
+        <div class="callout tip"><div class="ic">i</div><div>Quer ver na prática por que PCs em VLANs diferentes não se enxergam, e como o roteador resolve isso? <button class="btn sm" style="margin-left:4px" onclick="redeLabShowModule('laboratorio')">Abrir Laboratório de Rede →</button></div></div>
 
-        <h2>STP — evitando loops</h2>
+        <h2>STP: evitando loops</h2>
         <p>Cabear switches redundantes (para ter backup) cria <b>loops</b>, que fazem quadros circularem infinitamente e derrubam a rede (tempestade de broadcast). O <b>Spanning Tree Protocol</b> calcula automaticamente uma árvore sem loops, colocando portas redundantes em modo <i>blocking</i> até serem necessárias.</p>
 
         <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-roteamento"></span></div><div id="quiz-roteamento"></div></div>
@@ -801,7 +801,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
       <section class="module" id="mod-laboratorio" hidden>
         <div class="eyebrow"><span class="badge avancado">Avançado</span><span>Módulo 12 · ~20 min</span></div>
         <h1>Laboratório de rede integrado</h1>
-        <p class="lede">Chegou a hora de ver tudo funcionando junto. Esta é uma rede pequena, só que real: dois computadores na VLAN 10, um na VLAN 20, um switch, um roteador que também faz DHCP e NAT, e a internet do outro lado. Escolha uma etapa abaixo e acompanhe cada pacote se movendo de verdade — com log técnico e as tabelas MAC, ARP, NAT e DHCP sendo preenchidas ao vivo.</p>
+        <p class="lede">Chegou a hora de ver tudo funcionando junto. Esta é uma rede pequena, só que real: dois computadores na VLAN 10, um na VLAN 20, um switch, um roteador que também faz DHCP e NAT, e a internet do outro lado. Escolha uma etapa abaixo e acompanhe cada pacote se movendo de verdade: com log técnico e as tabelas MAC, ARP, NAT e DHCP sendo preenchidas ao vivo.</p>
 
         <div class="lab-topo"><svg id="labSvg" viewBox="0 0 720 300"></svg></div>
         <div class="lab-ticker" id="labTicker">Pronto. Escolha uma etapa abaixo para começar.</div>
@@ -817,10 +817,10 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         </div>
 
         <div class="lab-panels">
-          <div class="lab-panel"><h4>Tabela MAC — Switch</h4><div id="labMacTable"><span class="empty">vazia</span></div></div>
-          <div class="lab-panel"><h4>Cache ARP — PC-A</h4><div id="labArpTable"><span class="empty">vazio</span></div></div>
-          <div class="lab-panel"><h4>Tabela NAT — Roteador</h4><div id="labNatTable"><span class="empty">vazia</span></div></div>
-          <div class="lab-panel"><h4>Concessões DHCP — Roteador</h4><div id="labDhcpTable"><span class="empty">nenhuma</span></div></div>
+          <div class="lab-panel"><h4>Tabela MAC: Switch</h4><div id="labMacTable"><span class="empty">vazia</span></div></div>
+          <div class="lab-panel"><h4>Cache ARP: PC-A</h4><div id="labArpTable"><span class="empty">vazio</span></div></div>
+          <div class="lab-panel"><h4>Tabela NAT: Roteador</h4><div id="labNatTable"><span class="empty">vazia</span></div></div>
+          <div class="lab-panel"><h4>Concessões DHCP: Roteador</h4><div id="labDhcpTable"><span class="empty">nenhuma</span></div></div>
           <div class="lab-panel lab-log" id="labLog"></div>
         </div>
 
@@ -828,9 +828,9 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         <ul class="tidy">
           <li><b>DHCP</b> deu a PC-A um endereço automaticamente, sem configuração manual.</li>
           <li><b>ARP</b> traduziu o IP do gateway para o MAC que o switch realmente usa para encaminhar quadros.</li>
-          <li><b>NAT (PAT)</b> trocou o IP privado de PC-A pelo IP público do roteador para a conversa sair à internet — e desfez a troca na volta.</li>
+          <li><b>NAT (PAT)</b> trocou o IP privado de PC-A pelo IP público do roteador para a conversa sair à internet, e desfez a troca na volta.</li>
           <li>Dentro da <b>mesma VLAN</b>, o switch encaminha direto pela tabela MAC, sem precisar do roteador.</li>
-          <li>Entre <b>VLANs diferentes</b>, o switch nunca encaminha sozinho — é sempre o roteador (aqui, via sub-interfaces 802.1Q) que faz a ponte.</li>
+          <li>Entre <b>VLANs diferentes</b>, o switch nunca encaminha sozinho: é sempre o roteador (aqui, via sub-interfaces 802.1Q) que faz a ponte.</li>
         </ul>
 
         <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-laboratorio"></span></div><div id="quiz-laboratorio"></div></div>
@@ -852,7 +852,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         </table></div>
 
         <h2>Simulador: como um firewall decide, regra por regra</h2>
-        <p>Firewalls avaliam a lista de regras (ACL) <b>em ordem</b>, de cima para baixo — a <b>primeira</b> que combinar decide o destino do pacote, e as seguintes nem chegam a ser olhadas. Teste pacotes diferentes contra esta lista e veja qual regra pega cada um:</p>
+        <p>Firewalls avaliam a lista de regras (ACL) <b>em ordem</b>, de cima para baixo: a <b>primeira</b> que combinar decide o destino do pacote, e as seguintes nem chegam a ser olhadas. Teste pacotes diferentes contra esta lista e veja qual regra pega cada um:</p>
         <div class="panel">
           <div class="table-wrap"><table id="fwTable">
             <tr><th>#</th><th>Ação</th><th>Protocolo</th><th>Porta</th></tr>
@@ -861,7 +861,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
             <tr id="fwRule-2"><td>3</td><td>✓ Permitir</td><td>UDP</td><td>53 (DNS)</td></tr>
             <tr id="fwRule-3"><td>4</td><td>✕ Bloquear</td><td>TCP</td><td>23 (Telnet)</td></tr>
             <tr id="fwRule-4"><td>5</td><td>✕ Bloquear</td><td>TCP</td><td>3389 (RDP)</td></tr>
-            <tr id="fwRule-implicit"><td>—</td><td>✕ Bloquear (implícita)</td><td>qualquer</td><td>qualquer</td></tr>
+            <tr id="fwRule-implicit"><td>N/A</td><td>✕ Bloquear (implícita)</td><td>qualquer</td><td>qualquer</td></tr>
           </table></div>
           <div class="actions" style="margin-top:10px;flex-wrap:wrap">
             <button class="btn sm fw-btn" data-proto="TCP" data-port="443">Testar TCP/443</button>
@@ -874,7 +874,7 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
           <p id="fwResult" style="font-size:13.5px;margin-top:12px;min-height:20px"></p>
         </div>
 
-        <h2>VPN — Rede Privada Virtual</h2>
+        <h2>VPN: Rede Privada Virtual</h2>
         <p>Cria um "túnel" criptografado sobre uma rede pública (como a internet), fazendo o tráfego parecer que trafega numa rede privada. Protege confidencialidade mesmo em redes não confiáveis (Wi-Fi público, por exemplo).</p>
         <div class="grid2">
           <div class="card"><b>Site-to-site</b><p style="font-size:13px;color:var(--fg-muted)">Liga redes inteiras (ex.: matriz ↔ filial) de forma permanente.</p></div>
@@ -895,8 +895,8 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
 
         <h2>IDS x IPS</h2>
         <ul class="tidy">
-          <li><b>IDS</b> (Intrusion Detection System) — monitora e <i>alerta</i> sobre atividade suspeita, não bloqueia.</li>
-          <li><b>IPS</b> (Intrusion Prevention System) — monitora e <i>bloqueia</i> ativamente a ameaça em tempo real.</li>
+          <li><b>IDS</b> (Intrusion Detection System): monitora e <i>alerta</i> sobre atividade suspeita, não bloqueia.</li>
+          <li><b>IPS</b> (Intrusion Prevention System): monitora e <i>bloqueia</i> ativamente a ameaça em tempo real.</li>
         </ul>
 
         <h2>Ataques comuns</h2>
@@ -924,11 +924,11 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
 
         <h2>Boas práticas essenciais</h2>
         <ul class="tidy">
-          <li>Segmentação de rede (VLANs, zonas de firewall) — limita o alcance de uma invasão.</li>
-          <li>Princípio do menor privilégio — cada usuário/sistema só acessa o estritamente necessário.</li>
+          <li>Segmentação de rede (VLANs, zonas de firewall): limita o alcance de uma invasão.</li>
+          <li>Princípio do menor privilégio: cada usuário/sistema só acessa o estritamente necessário.</li>
           <li>Autenticação multifator (MFA) em todo acesso sensível.</li>
           <li>Atualização e patching constante de equipamentos e sistemas.</li>
-          <li><b>Zero Trust</b> — não confiar implicitamente em nada, nem dentro do perímetro da rede; verificar sempre.</li>
+          <li><b>Zero Trust</b>: não confiar implicitamente em nada, nem dentro do perímetro da rede; verificar sempre.</li>
         </ul>
 
         <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-seguranca"></span></div><div id="quiz-seguranca"></div></div>
@@ -944,8 +944,8 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         <h2>Gerações do Wi-Fi</h2>
         <div class="table-wrap"><table>
           <tr><th>Padrão</th><th>Nome comercial</th><th>Frequência</th><th>Velocidade máx. teórica</th></tr>
-          <tr><td>802.11b</td><td>—</td><td>2,4 GHz</td><td>11 Mbps</td></tr>
-          <tr><td>802.11g</td><td>—</td><td>2,4 GHz</td><td>54 Mbps</td></tr>
+          <tr><td>802.11b</td><td>N/A</td><td>2,4 GHz</td><td>11 Mbps</td></tr>
+          <tr><td>802.11g</td><td>N/A</td><td>2,4 GHz</td><td>54 Mbps</td></tr>
           <tr><td>802.11n</td><td>Wi-Fi 4</td><td>2,4 / 5 GHz</td><td>600 Mbps</td></tr>
           <tr><td>802.11ac</td><td>Wi-Fi 5</td><td>5 GHz</td><td>~3,5 Gbps</td></tr>
           <tr><td>802.11ax</td><td>Wi-Fi 6 / 6E</td><td>2,4 / 5 / 6 GHz</td><td>~9,6 Gbps</td></tr>
@@ -959,10 +959,10 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
           <tr><td>5 GHz</td><td>Menor</td><td>Maior</td><td>Mais canais, menos disputa</td></tr>
           <tr><td>6 GHz (Wi-Fi 6E/7)</td><td>Menor ainda</td><td>Maior ainda</td><td>Espectro quase vazio hoje</td></tr>
         </table></div>
-        <div class="callout tip"><div class="ic">i</div><div>Em 2,4 GHz, só os canais <b>1, 6 e 11</b> não se sobrepõem entre si — usar outros canais nessa faixa causa interferência entre redes vizinhas.</div></div>
+        <div class="callout tip"><div class="ic">i</div><div>Em 2,4 GHz, só os canais <b>1, 6 e 11</b> não se sobrepõem entre si: usar outros canais nessa faixa causa interferência entre redes vizinhas.</div></div>
 
         <h2>Simulador: por que só os canais 1, 6 e 11 não se sobrepõem</h2>
-        <p>Cada canal Wi-Fi em 2,4GHz ocupa uma faixa de espectro bem mais larga do que o espaçamento entre os números de canal — por isso redes vizinhas em canais próximos interferem entre si. Escolha o canal de 3 roteadores próximos e veja onde aparece sobreposição:</p>
+        <p>Cada canal Wi-Fi em 2,4GHz ocupa uma faixa de espectro bem mais larga do que o espaçamento entre os números de canal: por isso redes vizinhas em canais próximos interferem entre si. Escolha o canal de 3 roteadores próximos e veja onde aparece sobreposição:</p>
         <div class="panel">
           <div class="actions" style="flex-wrap:wrap;gap:18px" id="chanControls"></div>
           <div id="chanStrip" style="margin-top:16px"></div>
@@ -972,14 +972,14 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         <h2>Evolução da segurança Wi-Fi</h2>
         <div class="table-wrap"><table>
           <tr><th>Protocolo</th><th>Situação</th></tr>
-          <tr><td>WEP</td><td>Quebrado há mais de uma década — nunca use</td></tr>
+          <tr><td>WEP</td><td>Quebrado há mais de uma década: nunca use</td></tr>
           <tr><td>WPA</td><td>Melhoria temporária sobre o WEP, também obsoleto</td></tr>
           <tr><td>WPA2 (PSK/Enterprise)</td><td>Padrão por muitos anos; ainda amplamente usado</td></tr>
-          <tr><td>WPA3</td><td>Atual — criptografia mais forte, resistente a ataques de força bruta offline</td></tr>
+          <tr><td>WPA3</td><td>Atual: criptografia mais forte, resistente a ataques de força bruta offline</td></tr>
         </table></div>
 
         <h2>Simulador: como um dispositivo se conecta a uma rede Wi-Fi</h2>
-        <p>Da descoberta da rede até o tráfego criptografado fluindo, a associação passa por várias etapas — inclusive uma troca de chaves em que a senha em si nunca viaja pelo ar:</p>
+        <p>Da descoberta da rede até o tráfego criptografado fluindo, a associação passa por várias etapas: inclusive uma troca de chaves em que a senha em si nunca viaja pelo ar:</p>
         <div class="panel">
           <div class="flow-actors" id="wifiFlowActors"></div>
           <div class="flow-msg" id="wifiFlowMsg"></div>
@@ -1000,11 +1000,11 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
         <h1>Tópicos avançados</h1>
         <p class="lede">O estado da arte e as ferramentas que todo profissional usa no dia a dia para diagnosticar redes.</p>
 
-        <h2>QoS — Qualidade de Serviço</h2>
+        <h2>QoS: Qualidade de Serviço</h2>
         <p>Nem todo tráfego é igual: uma chamada de vídeo não tolera atraso, mas um download de arquivo pode esperar. <b>QoS</b> prioriza pacotes sensíveis a latência (marcados com <b>DSCP</b>) para que cheguem antes em momentos de congestionamento.</p>
 
-        <h2>SDN — Software-Defined Networking</h2>
-        <p>Redes tradicionais têm o "plano de controle" (decide rotas) e o "plano de dados" (encaminha pacotes) dentro de cada equipamento. SDN separa os dois: um controlador central e programável decide as regras, e os switches/roteadores só executam — como trocar cada semáforo de uma cidade por um painel único que os controla todos.</p>
+        <h2>SDN: Software-Defined Networking</h2>
+        <p>Redes tradicionais têm o "plano de controle" (decide rotas) e o "plano de dados" (encaminha pacotes) dentro de cada equipamento. SDN separa os dois: um controlador central e programável decide as regras, e os switches/roteadores só executam: como trocar cada semáforo de uma cidade por um painel único que os controla todos.</p>
 
         <h2>Redes em nuvem (visão geral)</h2>
         <p>Provedores de nuvem (AWS, Azure, GCP) recriam os mesmos conceitos deste curso em software: uma <b>VPC</b> (Virtual Private Cloud) é essencialmente uma rede privada com sub-redes (o mesmo CIDR que você calculou no módulo 3), tabelas de rotas e "security groups" que funcionam como firewalls por instância.</p>
@@ -1022,9 +1022,9 @@ footer.credit{max-width:840px;margin:40px auto 0;padding:0 2px 10px;color:var(--
 
         <h2>Transição IPv6</h2>
         <ul class="tidy">
-          <li><b>Dual stack</b> — a interface roda IPv4 e IPv6 ao mesmo tempo (abordagem mais comum hoje).</li>
-          <li><b>Tunelamento</b> — encapsula pacotes IPv6 dentro de IPv4 para atravessar trechos que só suportam IPv4.</li>
-          <li><b>NAT64/DNS64</b> — permite que clientes só-IPv6 alcancem servidores só-IPv4.</li>
+          <li><b>Dual stack</b>: a interface roda IPv4 e IPv6 ao mesmo tempo (abordagem mais comum hoje).</li>
+          <li><b>Tunelamento</b>: encapsula pacotes IPv6 dentro de IPv4 para atravessar trechos que só suportam IPv4.</li>
+          <li><b>NAT64/DNS64</b>: permite que clientes só-IPv6 alcancem servidores só-IPv4.</li>
         </ul>
 
         <div class="quiz"><div class="quiz-head"><h3 style="margin:0">Quiz rápido</h3><span class="quiz-score" id="score-avancado"></span></div><div id="quiz-avancado"></div></div>
@@ -1219,12 +1219,12 @@ function initFlow(prefix, actors, steps){
 initFlow("netFlow",
   [{ico:"🖥️",label:"Seu PC"},{ico:"📡",label:"Roteador"},{ico:"🌐",label:"ISP"},{ico:"🖧",label:"Backbone"},{ico:"🗄️",label:"Servidor"}],
   [
-    {active:[0],msg:"1. Você digita o endereço",desc:"O navegador precisa primeiro descobrir o IP do site (consulta DNS — veja o módulo 10)."},
+    {active:[0],msg:"1. Você digita o endereço",desc:"O navegador precisa primeiro descobrir o IP do site (consulta DNS: veja o módulo 10)."},
     {active:[0,1],msg:"2. Pacotes saem pelo seu roteador",desc:"Seu roteador doméstico encaminha os pacotes para fora da sua rede local, até o provedor (ISP)."},
     {active:[1,2],msg:"3. O provedor (ISP) assume",desc:"Sua operadora de internet roteia o tráfego para a rede dela e decide o próximo salto."},
     {active:[2,3],msg:"4. Viagem pelos backbones",desc:"O tráfego atravessa links de alta capacidade entre provedores (peering) até chegar perto do destino."},
     {active:[3,4],msg:"5. Chegada ao servidor",desc:"Os pacotes chegam ao servidor que hospeda o site, que processa e devolve a resposta pelo caminho (possivelmente diferente)."},
-    {active:[0,4],msg:"6. A página aparece",desc:"Seu navegador remonta os dados recebidos e renderiza a página — tudo isso em geral leva menos de um segundo."}
+    {active:[0,4],msg:"6. A página aparece",desc:"Seu navegador remonta os dados recebidos e renderiza a página: tudo isso em geral leva menos de um segundo."}
   ]
 );
 
@@ -1245,17 +1245,17 @@ initFlow("dnsFlow",
     {active:[1,2],msg:"Pergunta ao servidor raiz",desc:"Se não está em cache, o resolvedor pergunta a um dos servidores raiz: 'quem cuida do .com?'"},
     {active:[1,3],msg:"Pergunta ao servidor TLD",desc:"A raiz aponta o servidor responsável por '.com'; o resolvedor pergunta a ele quem cuida de 'exemplo.com'."},
     {active:[1,4],msg:"Pergunta ao servidor autoritativo",desc:"O TLD aponta o servidor autoritativo de exemplo.com, que finalmente responde com o IP exato do site."},
-    {active:[0,1],msg:"Resposta final",desc:"O resolvedor entrega o IP ao seu computador — e guarda em cache por um tempo (TTL) para não repetir tudo de novo."}
+    {active:[0,1],msg:"Resposta final",desc:"O resolvedor entrega o IP ao seu computador, e guarda em cache por um tempo (TTL) para não repetir tudo de novo."}
   ]
 );
 
 initFlow("dhcpFlow",
   [{ico:"💻",label:"Cliente"},{ico:"🗄️",label:"Servidor DHCP"}],
   [
-    {active:[0],msg:"D — Discover",desc:"O cliente, sem IP ainda, manda um broadcast: 'alguém tem um endereço IP para mim?'"},
-    {active:[1],msg:"O — Offer",desc:"Um servidor DHCP disponível oferece um IP livre da sua faixa, junto com máscara, gateway e DNS."},
-    {active:[0],msg:"R — Request",desc:"O cliente aceita formalmente a oferta, pedindo (em broadcast) para confirmar aquele IP especificamente."},
-    {active:[1],msg:"A — Acknowledge",desc:"O servidor confirma a concessão (lease) daquele IP por um período determinado, e o cliente já pode usá-lo."}
+    {active:[0],msg:"D: Discover",desc:"O cliente, sem IP ainda, manda um broadcast: 'alguém tem um endereço IP para mim?'"},
+    {active:[1],msg:"O: Offer",desc:"Um servidor DHCP disponível oferece um IP livre da sua faixa, junto com máscara, gateway e DNS."},
+    {active:[0],msg:"R: Request",desc:"O cliente aceita formalmente a oferta, pedindo (em broadcast) para confirmar aquele IP especificamente."},
+    {active:[1],msg:"A: Acknowledge",desc:"O servidor confirma a concessão (lease) daquele IP por um período determinado, e o cliente já pode usá-lo."}
   ]
 );
 
@@ -1289,7 +1289,7 @@ function renderEncap(){
   var order = [6,5,4,3,2,1];
   for(var i=0;i<encapStep-1;i++){
     var ln = order[i];
-    html = '<div class="encap-box l'+ln+'"><span>L'+ln+' '+ENCAP_LAYERS[ln]+' — adiciona cabeçalho</span>'+html+'</div>';
+    html = '<div class="encap-box l'+ln+'"><span>L'+ln+' '+ENCAP_LAYERS[ln]+': adiciona cabeçalho</span>'+html+'</div>';
   }
   document.getElementById("encapWrap").innerHTML = html;
   document.getElementById("encapPdu").textContent = ENCAP_PDU[8-encapStep];
@@ -1361,8 +1361,8 @@ var TOPOS = {
     nodes:[{id:"H",x:200,y:110,label:"HUB/SW"},{id:"A",x:200,y:30,label:"PC-A"},{id:"B",x:320,y:70,label:"PC-B"},{id:"C",x:320,y:160,label:"PC-C"},{id:"D",x:80,y:160,label:"PC-D"},{id:"E",x:80,y:70,label:"PC-E"}],
     edges:[["H","A"],["H","B"],["H","C"],["H","D"],["H","E"]],
     explain:function(failed){
-      if(failed==="H") return "O concentrador central falhou: <b>toda a rede fica isolada</b> — ninguém consegue se comunicar. Esse é o ponto único de falha da topologia estrela.";
-      return "Apenas <b>"+failed+"</b> ficou isolado. Todos os outros nós continuam se comunicando normalmente através do concentrador — essa é a grande vantagem da estrela.";
+      if(failed==="H") return "O concentrador central falhou: <b>toda a rede fica isolada</b>: ninguém consegue se comunicar. Esse é o ponto único de falha da topologia estrela.";
+      return "Apenas <b>"+failed+"</b> ficou isolado. Todos os outros nós continuam se comunicando normalmente através do concentrador: essa é a grande vantagem da estrela.";
     }
   },
   barramento: {
@@ -1370,7 +1370,7 @@ var TOPOS = {
     nodes:[{id:"A",x:40,y:110,label:"PC-A"},{id:"B",x:130,y:110,label:"PC-B"},{id:"C",x:220,y:110,label:"PC-C"},{id:"D",x:310,y:110,label:"PC-D"},{id:"E",x:360,y:110,label:"PC-E"}],
     edges:[["A","B"],["B","C"],["C","D"],["D","E"]],
     explain:function(failed){
-      return "Um dispositivo com defeito (<b>"+failed+"</b>) normalmente não derruba o barramento — mas se o <b>cabo compartilhado</b> se rompe em qualquer ponto, toda a comunicação além da ruptura para. É por isso que o barramento caiu em desuso: um único corte de cabo compromete a rede inteira.";
+      return "Um dispositivo com defeito (<b>"+failed+"</b>) normalmente não derruba o barramento. Mas se o <b>cabo compartilhado</b> se rompe em qualquer ponto, toda a comunicação além da ruptura para. É por isso que o barramento caiu em desuso: um único corte de cabo compromete a rede inteira.";
     }
   },
   anel: {
@@ -1386,7 +1386,7 @@ var TOPOS = {
     nodes:[{id:"A",x:200,y:25,label:"PC-A"},{id:"B",x:335,y:90,label:"PC-B"},{id:"C",x:280,y:195,label:"PC-C"},{id:"D",x:120,y:195,label:"PC-D"},{id:"E",x:65,y:90,label:"PC-E"}],
     edges:[["A","B"],["A","C"],["A","D"],["A","E"],["B","C"],["B","D"],["B","E"],["C","D"],["C","E"],["D","E"]],
     explain:function(failed){
-      return "Mesmo com <b>"+failed+"</b> fora do ar, todos os outros nós continuam totalmente conectados entre si por caminhos alternativos diretos. É a topologia mais resiliente — ao custo de muito mais cabeamento/enlaces.";
+      return "Mesmo com <b>"+failed+"</b> fora do ar, todos os outros nós continuam totalmente conectados entre si por caminhos alternativos diretos. É a topologia mais resiliente: ao custo de muito mais cabeamento/enlaces.";
     }
   }
 };
@@ -1458,7 +1458,7 @@ document.getElementById("hsSend").addEventListener("click", function(){
   setTimeout(function(){
     if(hsMode==="hub"){
       document.querySelectorAll(".hs-line").forEach(function(l){ l.classList.add("on","bad"); });
-      document.getElementById("hsResult").innerHTML = "<b>Modo Hub:</b> o quadro foi repetido para <b>todas</b> as portas (PC2, PC3 e PC4 recebem, mesmo não sendo o destino — só PC2 vai processar, os outros descartam). Ineficiente e inseguro.";
+      document.getElementById("hsResult").innerHTML = "<b>Modo Hub:</b> o quadro foi repetido para <b>todas</b> as portas (PC2, PC3 e PC4 recebem, mesmo não sendo o destino: só PC2 vai processar, os outros descartam). Ineficiente e inseguro.";
     } else {
       document.querySelector('.hs-line[data-to="PC2"]').classList.add("on");
       document.getElementById("hsResult").innerHTML = "<b>Modo Switch:</b> consultando sua tabela MAC, o switch envia o quadro <b>somente</b> para a porta de PC2. PC3 e PC4 nunca veem esse tráfego.";
@@ -1574,20 +1574,20 @@ function labMove(fromId, toId, label, color){
 
 async function labScDhcp(){
   labLog("[PC-A] Ainda sem IP. Vai pedir um endereço via DHCP.","pc");
-  await labMove("A","SW","DHCPDISCOVER (broadcast) — PC-A → Switch","var(--accent)");
+  await labMove("A","SW","DHCPDISCOVER (broadcast): PC-A → Switch","var(--accent)");
   labLog("[Switch] Recebe na porta de PC-A (VLAN 10). Inunda para todas as portas da VLAN 10, menos a de origem.","sw");
-  await labMove("SW","B","Flood na VLAN 10 — PC-B recebe e ignora","var(--accent)");
-  await labMove("SW","RT","DHCPDISCOVER — Switch → Roteador","var(--accent)");
+  await labMove("SW","B","Flood na VLAN 10: PC-B recebe e ignora","var(--accent)");
+  await labMove("SW","RT","DHCPDISCOVER: Switch → Roteador","var(--accent)");
   await labSleep(150);
   labLog("[Roteador] Serviço DHCP escolhe um IP livre do pool 192.168.10.0/24.","rt");
   await labMove("RT","SW","DHCPOFFER: 192.168.10.101","var(--accent)");
-  await labMove("SW","A","DHCPOFFER — Switch → PC-A","var(--accent)");
+  await labMove("SW","A","DHCPOFFER: Switch → PC-A","var(--accent)");
   labLog("[PC-A] Aceita a oferta.","pc");
   await labMove("A","SW","DHCPREQUEST (broadcast)","var(--accent)");
-  await labMove("SW","RT","DHCPREQUEST — Switch → Roteador","var(--accent)");
+  await labMove("SW","RT","DHCPREQUEST: Switch → Roteador","var(--accent)");
   labLog("[Roteador] Confirma a concessão por 24 horas (DHCPACK).","rt");
   await labMove("RT","SW","DHCPACK: 192.168.10.101","var(--accent)");
-  await labMove("SW","A","DHCPACK — Switch → PC-A","var(--accent)");
+  await labMove("SW","A","DHCPACK: Switch → PC-A","var(--accent)");
   labState.ip.A = "192.168.10.101";
   labState.dhcp["192.168.10.101"] = "PC-A ("+labState.mac.A+")";
   labState.macTable["porta 1 (PC-A)"] = labState.mac.A;
@@ -1596,15 +1596,15 @@ async function labScDhcp(){
   labLog("[PC-A] Configurado: IP 192.168.10.101/24, gateway 192.168.10.1.","pc");
 }
 async function labScArp(){
-  if(!labState.ip.A){ labLog("Rode primeiro a etapa ① — PC-A precisa de um IP.","warn"); return; }
+  if(!labState.ip.A){ labLog("Rode primeiro a etapa ①: PC-A precisa de um IP.","warn"); return; }
   labLog("[PC-A] Precisa enviar um pacote para fora da sua rede. Primeiro, descobre o MAC do gateway 192.168.10.1.","pc");
   await labMove("A","SW","ARP: quem tem 192.168.10.1?","var(--accent-2)");
   labLog("[Switch] Inunda o pedido ARP para toda a VLAN 10.","sw");
   await labMove("SW","B","ARP (PC-B ignora, não é ele)","var(--accent-2)");
-  await labMove("SW","RT","ARP request — Switch → Roteador","var(--accent-2)");
+  await labMove("SW","RT","ARP request: Switch → Roteador","var(--accent-2)");
   labLog("[Roteador] Reconhece seu próprio IP na sub-interface VLAN10 e responde.","rt");
   await labMove("RT","SW","ARP reply: MAC "+labState.mac.RT10,"var(--accent-2)");
-  await labMove("SW","A","ARP reply — Switch → PC-A","var(--accent-2)");
+  await labMove("SW","A","ARP reply: Switch → PC-A","var(--accent-2)");
   labState.arp["192.168.10.1"] = labState.mac.RT10;
   labState.macTable["porta 1 (PC-A)"] = labState.mac.A;
   labState.macTable["uplink (Roteador)"] = labState.mac.RT10;
@@ -1612,10 +1612,10 @@ async function labScArp(){
   labLog("[PC-A] Guardou o MAC do gateway em cache ARP. Pronto para montar o quadro Ethernet.","pc");
 }
 async function labScInternet(){
-  if(!labState.ip.A){ labLog("Rode primeiro a etapa ① — PC-A precisa de um IP.","warn"); return; }
+  if(!labState.ip.A){ labLog("Rode primeiro a etapa ①: PC-A precisa de um IP.","warn"); return; }
   labLog("[PC-A] Monta um pacote TCP: origem 192.168.10.101, destino 198.51.100.23:443.","pc");
   await labMove("A","SW","SYN → 198.51.100.23:443","var(--good)");
-  await labMove("SW","RT","SYN — Switch → Roteador","var(--good)");
+  await labMove("SW","RT","SYN: Switch → Roteador","var(--good)");
   labLog("[Roteador] Antes de rotear à internet, aplica NAT (PAT): 192.168.10.101:51342 → 203.0.113.9:51342.","rt");
   labState.nat.push({int:"192.168.10.101:51342", ext:"203.0.113.9:51342", dst:"198.51.100.23:443"});
   labRenderTables();
@@ -1623,42 +1623,42 @@ async function labScInternet(){
   labLog("[Internet] O pacote atravessa a internet até o servidor.","net");
   await labMove("NET","RT","← SYN-ACK","var(--good)");
   labLog("[Roteador] Consulta a tabela de NAT e traduz de volta para 192.168.10.101:51342.","rt");
-  await labMove("RT","SW","SYN-ACK — Roteador → Switch","var(--good)");
-  await labMove("SW","A","SYN-ACK — Switch → PC-A","var(--good)");
+  await labMove("RT","SW","SYN-ACK: Roteador → Switch","var(--good)");
+  await labMove("SW","A","SYN-ACK: Switch → PC-A","var(--good)");
   await labMove("A","SW","ACK →","var(--good)");
-  await labMove("SW","RT","ACK — Switch → Roteador","var(--good)");
+  await labMove("SW","RT","ACK: Switch → Roteador","var(--good)");
   await labMove("RT","NET","ACK (NAT) → Internet","var(--good)");
   labLog("[PC-A] Conexão TCP estabelecida. A partir daqui os dados da aplicação fluem normalmente.","pc");
 }
 async function labScSameVlan(){
-  labLog("[PC-A] Quer falar com PC-B (192.168.10.102) — mesma sub-rede/VLAN, não precisa do roteador.","pc");
+  labLog("[PC-A] Quer falar com PC-B (192.168.10.102): mesma sub-rede/VLAN, não precisa do roteador.","pc");
   await labMove("A","SW","ARP: quem tem 192.168.10.102?","var(--accent-2)");
-  await labMove("SW","B","ARP request — Switch → PC-B","var(--accent-2)");
+  await labMove("SW","B","ARP request: Switch → PC-B","var(--accent-2)");
   await labMove("B","SW","ARP reply: MAC "+labState.mac.B,"var(--accent-2)");
-  await labMove("SW","A","ARP reply — Switch → PC-A","var(--accent-2)");
+  await labMove("SW","A","ARP reply: Switch → PC-A","var(--accent-2)");
   labState.arp["192.168.10.102"] = labState.mac.B;
   labState.macTable["porta 2 (PC-B)"] = labState.mac.B;
   labRenderTables();
   await labMove("A","SW","Quadro de dados →","var(--good)");
-  await labMove("SW","B","Quadro de dados — Switch → PC-B","var(--good)");
+  await labMove("SW","B","Quadro de dados: Switch → PC-B","var(--good)");
   labLog("[Switch] A e B estão na mesma VLAN (10): encaminha direto pela tabela MAC, sem o roteador.","sw");
 }
 async function labScDiffVlan(){
-  labLog("[PC-A] Tenta falar com PC-C (192.168.20.101) — repare: é outra sub-rede e outra VLAN.","pc");
+  labLog("[PC-A] Tenta falar com PC-C (192.168.20.101), repare: é outra sub-rede e outra VLAN.","pc");
   await labMove("A","SW","Quadro destinado a 192.168.20.101","var(--bad)");
-  labLog("[Switch] A porta de PC-C está na VLAN 20; a de PC-A está na VLAN 10. Um switch NUNCA encaminha tráfego entre VLANs diferentes — são domínios de broadcast isolados.","warn");
-  labLog("[PC-A] O sistema operacional já sabe disso: como 192.168.20.101 não está na mesma sub-rede, o pacote vai para o gateway, não direto — veja a etapa ⑥.","pc");
+  labLog("[Switch] A porta de PC-C está na VLAN 20; a de PC-A está na VLAN 10. Um switch NUNCA encaminha tráfego entre VLANs diferentes: são domínios de broadcast isolados.","warn");
+  labLog("[PC-A] O sistema operacional já sabe disso: como 192.168.20.101 não está na mesma sub-rede, o pacote vai para o gateway, não direto: veja a etapa ⑥.","pc");
 }
 async function labScInterVlan(){
-  if(!labState.ip.A){ labLog("Rode primeiro a etapa ① — PC-A precisa de um IP.","warn"); return; }
-  labLog("[PC-A] Para alcançar 192.168.20.101, envia o pacote para o gateway 192.168.10.1 — igual fez para a internet.","pc");
+  if(!labState.ip.A){ labLog("Rode primeiro a etapa ①: PC-A precisa de um IP.","warn"); return; }
+  labLog("[PC-A] Para alcançar 192.168.20.101, envia o pacote para o gateway 192.168.10.1, igual fez para a internet.","pc");
   await labMove("A","SW","Pacote → gateway","var(--accent)");
   await labMove("SW","RT","Pacote (sub-interface VLAN10)","var(--accent)");
-  labLog("[Roteador] Consulta a tabela de roteamento: 192.168.20.0/24 está diretamente conectado na sub-interface VLAN20. Isso é 'router-on-a-stick' — uma porta física com sub-interfaces 802.1Q roteando entre as VLANs do switch.","rt");
+  labLog("[Roteador] Consulta a tabela de roteamento: 192.168.20.0/24 está diretamente conectado na sub-interface VLAN20. Isso é 'router-on-a-stick': uma porta física com sub-interfaces 802.1Q roteando entre as VLANs do switch.","rt");
   await labMove("RT","SW","Pacote (sub-interface VLAN20)","var(--accent)");
   await labMove("SW","C","Pacote → PC-C","var(--accent)");
   labLog("[PC-C] Recebe o pacote de PC-A. A resposta percorre o caminho inverso, sempre passando pelo roteador.","pc");
-  labLog("✓ PC-A e PC-C agora se comunicam — nunca direto pelo switch, sempre via roteamento.","rt");
+  labLog("✓ PC-A e PC-C agora se comunicam: nunca direto pelo switch, sempre via roteamento.","rt");
 }
 var LAB_SCENARIOS = {dhcp:labScDhcp, arp:labScArp, internet:labScInternet, samevlan:labScSameVlan, diffvlan:labScDiffVlan, intervlan:labScInterVlan};
 function labSetRunning(v){
@@ -1711,8 +1711,8 @@ async function runFirewallTest(proto,port){
       row.classList.remove("fw-row-checking");
       row.classList.add(FW_RULES[i].action==="allow" ? "fw-row-allow":"fw-row-block");
       result.innerHTML = FW_RULES[i].action==="allow"
-        ? "<b style='color:var(--good)'>✓ PERMITIDO</b> — combinou com a regra "+(i+1)+" ("+proto+"/"+port+")."
-        : "<b style='color:var(--bad)'>✕ BLOQUEADO</b> — combinou com a regra "+(i+1)+" ("+proto+"/"+port+").";
+        ? "<b style='color:var(--good)'>✓ PERMITIDO</b>: combinou com a regra "+(i+1)+" ("+proto+"/"+port+")."
+        : "<b style='color:var(--bad)'>✕ BLOQUEADO</b>: combinou com a regra "+(i+1)+" ("+proto+"/"+port+").";
       fwRunning = false;
       document.querySelectorAll(".fw-btn").forEach(function(b){ b.disabled = false; });
       return;
@@ -1721,7 +1721,7 @@ async function runFirewallTest(proto,port){
   }
   var imp = document.getElementById("fwRule-implicit");
   imp.classList.add("fw-row-block");
-  result.innerHTML = "<b style='color:var(--bad)'>✕ BLOQUEADO</b> — nenhuma regra explícita combinou com "+proto+"/"+port+", então a regra implícita final (negar tudo) se aplica. Esse é o princípio da <b>negação padrão (default deny)</b>.";
+  result.innerHTML = "<b style='color:var(--bad)'>✕ BLOQUEADO</b>: nenhuma regra explícita combinou com "+proto+"/"+port+", então a regra implícita final (negar tudo) se aplica. Esse é o princípio da <b>negação padrão (default deny)</b>.";
   fwRunning = false;
   document.querySelectorAll(".fw-btn").forEach(function(b){ b.disabled = false; });
 }
@@ -1785,7 +1785,7 @@ async function mitmNormalScenario(){
 async function mitmAttackScenario(){
   mitmLog("[Atacante] Envia respostas ARP falsas repetidamente, dizendo que o IP do gateway está no MAC dele (ARP spoofing).","warn");
   await mitmMove("ATK","PC","ARP reply FALSO: 'eu sou o gateway'","var(--bad)");
-  mitmLog("[PC] Acredita na mensagem e atualiza o cache ARP — agora associa o IP do gateway ao MAC do atacante.","pc");
+  mitmLog("[PC] Acredita na mensagem e atualiza o cache ARP: agora associa o IP do gateway ao MAC do atacante.","pc");
   await mitmMove("PC","ATK","Dados → (sem saber, vão para o atacante)","var(--bad)");
   mitmLog("[Atacante] Intercepta o tráfego: pode ler, registrar ou alterar os dados antes de repassar (Man-in-the-Middle).","warn");
   await mitmMove("ATK","GW","Dados repassados → gateway real","var(--accent-2)");
@@ -1847,9 +1847,9 @@ function renderChanStrip(){
   var result = document.getElementById("chanResult");
   if(!result) return;
   if(!Object.keys(pairs).length){
-    result.innerHTML = "<b style='color:var(--good)'>✓ Sem sobreposição!</b> Esses canais não interferem entre si — exatamente por isso 1, 6 e 11 são a combinação recomendada para 3 redes próximas.";
+    result.innerHTML = "<b style='color:var(--good)'>✓ Sem sobreposição!</b> Esses canais não interferem entre si: exatamente por isso 1, 6 e 11 são a combinação recomendada para 3 redes próximas.";
   } else {
-    result.innerHTML = "<b style='color:var(--bad)'>⚠ Sobreposição detectada</b> entre "+Object.keys(pairs).map(function(p){return "AP-"+p.replace("+"," e AP-");}).join(", ")+" — essas redes competem pelo mesmo espectro e perdem desempenho por interferência mútua.";
+    result.innerHTML = "<b style='color:var(--bad)'>⚠ Sobreposição detectada</b> entre "+Object.keys(pairs).map(function(p){return "AP-"+p.replace("+"," e AP-");}).join(", ")+": essas redes competem pelo mesmo espectro e perdem desempenho por interferência mútua.";
   }
 }
 renderChanControls();
@@ -1859,9 +1859,9 @@ initFlow("wifiFlow",
   [{ico:"📱",label:"Dispositivo"},{ico:"📶",label:"Roteador (AP)"}],
   [
     {active:[0,1],msg:"Beacon / Probe",desc:"O roteador anuncia o SSID (ou o dispositivo pergunta 'quem está por aqui?' com um Probe Request). O dispositivo descobre a rede e suas capacidades de segurança (WPA2/WPA3)."},
-    {active:[0,1],msg:"Autenticação (Open System)",desc:"Nas redes modernas, essa etapa é só uma formalidade de identificação — a segurança de verdade vem na troca de chaves, mais adiante."},
+    {active:[0,1],msg:"Autenticação (Open System)",desc:"Nas redes modernas, essa etapa é só uma formalidade de identificação: a segurança de verdade vem na troca de chaves, mais adiante."},
     {active:[0,1],msg:"Associação",desc:"O dispositivo pede para 'entrar' formalmente na rede, e o roteador reserva um identificador de associação para ele."},
-    {active:[0,1],msg:"4-way handshake (WPA2) / SAE (WPA3)",desc:"Dispositivo e roteador provam, cada um, que conhecem a senha — sem nunca transmiti-la — e derivam juntos uma chave de criptografia única para essa sessão."},
+    {active:[0,1],msg:"4-way handshake (WPA2) / SAE (WPA3)",desc:"Dispositivo e roteador provam, cada um, que conhecem a senha, sem nunca transmiti-la, e derivam juntos uma chave de criptografia única para essa sessão."},
     {active:[0,1],msg:"✓ Conectado e criptografado",desc:"A partir daqui, todo o tráfego entre o dispositivo e o roteador é criptografado com a chave gerada na etapa anterior."}
   ]
 );
@@ -1891,7 +1891,7 @@ var PROTOCOLS = [
   ["HTTPS","443","TCP","HTTP com criptografia TLS/SSL"],
   ["FTP","20/21","TCP","Transferência de arquivos (dados/controle)"],
   ["SSH","22","TCP","Acesso remoto seguro a linha de comando"],
-  ["Telnet","23","TCP","Acesso remoto sem criptografia — evite usar"],
+  ["Telnet","23","TCP","Acesso remoto sem criptografia: evite usar"],
   ["SMTP","25","TCP","Envio de e-mails entre servidores"],
   ["DNS","53","TCP/UDP","Resolução de nomes de domínio para IP"],
   ["DHCP","67/68","UDP","Atribuição automática de configuração IP"],
@@ -1927,7 +1927,7 @@ var GLOSS = [
   ["Backbone","Infraestrutura de alta capacidade que interliga grandes redes/provedores."],
   ["Bandwidth (banda)","Capacidade máxima de transmissão de um enlace, em bits por segundo."],
   ["Broadcast","Envio de dados para todos os dispositivos de um domínio de rede."],
-  ["BGP","Protocolo de roteamento entre sistemas autônomos — a espinha dorsal da internet."],
+  ["BGP","Protocolo de roteamento entre sistemas autônomos: a espinha dorsal da internet."],
   ["CIDR","Notação de máscara por prefixo (ex.: /24), substituindo as classes fixas."],
   ["DHCP","Protocolo que atribui automaticamente IP e configurações de rede."],
   ["DNS","Sistema que traduz nomes de domínio em endereços IP."],
@@ -1942,7 +1942,7 @@ var GLOSS = [
   ["IP","Endereço lógico que identifica um dispositivo numa rede."],
   ["IPv6","Versão de 128 bits do protocolo IP, sucessora do IPv4."],
   ["ISP","Provedor de Serviço de Internet (Internet Service Provider)."],
-  ["Jitter","Variação na latência de pacotes consecutivos — crítico para VoIP/vídeo."],
+  ["Jitter","Variação na latência de pacotes consecutivos: crítico para VoIP/vídeo."],
   ["Última milha","Trecho final da rede entre o provedor e o cliente."],
   ["Latência","Tempo que um pacote leva para ir de origem a destino."],
   ["MAC Address","Endereço físico único de 48 bits de uma interface de rede."],
@@ -1983,7 +1983,7 @@ renderGloss("");
 /* ============================ QUIZ ENGINE ============================ */
 var QUIZZES = {
   internet:[
-    {q:"O princípio fundamental por trás da internet, herdado da ARPANET, é:",opts:["Um único servidor central controla tudo","Comutação de pacotes — dados divididos e roteados independentemente","Apenas satélites transmitem dados"],correct:1,explain:"A comutação de pacotes permite que a rede sobreviva à perda de qualquer nó, pois os dados seguem rotas independentes."},
+    {q:"O princípio fundamental por trás da internet, herdado da ARPANET, é:",opts:["Um único servidor central controla tudo","Comutação de pacotes: dados divididos e roteados independentemente","Apenas satélites transmitem dados"],correct:1,explain:"A comutação de pacotes permite que a rede sobreviva à perda de qualquer nó, pois os dados seguem rotas independentes."},
     {q:"Qual meio físico normalmente oferece a menor latência e maior velocidade?",opts:["Linha discada","Satélite","Fibra óptica"],correct:2,explain:"Fibra óptica tem altíssima largura de banda e baixíssima latência comparada a outros meios."},
     {q:"'A internet não tem um centro' significa que ela é:",opts:["Descentralizada","Controlada por um único país","Impossível de falhar"],correct:0,explain:"Cada operadora/rede mantém sua parte e todas concordam em usar os mesmos protocolos."}
   ],
@@ -1996,7 +1996,7 @@ var QUIZZES = {
   ipv4:[
     {q:"Qual é a máscara padrão de uma rede classe C?",opts:["255.0.0.0","255.255.0.0","255.255.255.0"],correct:2,explain:"Classe C usa /24, ou seja, 255.255.255.0."},
     {q:"O endereço 10.5.3.2 pertence a qual tipo de faixa?",opts:["Pública","Privada (RFC 1918)","Loopback"],correct:1,explain:"Toda a faixa 10.0.0.0/8 é reservada para uso privado pela RFC 1918."},
-    {q:"Em uma sub-rede /30, quantos hosts utilizáveis existem?",opts:["4","2","30"],correct:1,explain:"/30 tem 4 endereços totais, menos rede e broadcast = 2 hosts utilizáveis — comum em links ponto a ponto."},
+    {q:"Em uma sub-rede /30, quantos hosts utilizáveis existem?",opts:["4","2","30"],correct:1,explain:"/30 tem 4 endereços totais, menos rede e broadcast = 2 hosts utilizáveis: comum em links ponto a ponto."},
     {q:"O endereço de broadcast de uma sub-rede é aquele onde:",opts:["Todos os bits de host são 0","Todos os bits de host são 1","Todos os bits são 1, incluindo os de rede"],correct:1,explain:"Broadcast = parte de rede fixa + todos os bits de host em 1."}
   ],
   ipv6:[
@@ -2041,9 +2041,9 @@ var QUIZZES = {
     {q:"Uma VLAN serve para:",opts:["Aumentar a velocidade do cabo","Segmentar logicamente uma rede física em várias redes isoladas","Substituir o roteador"],correct:1,explain:"VLANs dividem um switch físico em domínios de broadcast separados logicamente."}
   ],
   laboratorio:[
-    {q:"No laboratório, por que o switch 'inunda' (flood) o DHCPDISCOVER para toda a VLAN?",opts:["Porque o switch está com defeito","Porque é um broadcast e o switch ainda não sabe em qual porta está o servidor DHCP","Porque é mais rápido que enviar direto"],correct:1,explain:"DHCPDISCOVER é enviado em broadcast — PC-A ainda não tem IP nem conhece o servidor — então o switch inunda a VLAN inteira, como faz com qualquer broadcast."},
+    {q:"No laboratório, por que o switch 'inunda' (flood) o DHCPDISCOVER para toda a VLAN?",opts:["Porque o switch está com defeito","Porque é um broadcast e o switch ainda não sabe em qual porta está o servidor DHCP","Porque é mais rápido que enviar direto"],correct:1,explain:"DHCPDISCOVER é enviado em broadcast (PC-A ainda não tem IP nem conhece o servidor), então o switch inunda a VLAN inteira, como faz com qualquer broadcast."},
     {q:"O que a NAT troca na etapa de acesso à internet?",opts:["O IP privado de origem pelo IP público do roteador","O IP de destino do servidor","O endereço MAC de PC-A"],correct:0,explain:"PAT/NAT overload traduz IP:porta privados para IP:porta públicos do roteador, e desfaz a tradução na resposta."},
-    {q:"Por que PC-A não consegue falar diretamente com PC-C através do switch?",opts:["Porque o cabo está com defeito","Porque estão em VLANs diferentes, e o switch não encaminha entre VLANs","Porque PC-C está desligado"],correct:1,explain:"VLANs diferentes são domínios de broadcast isolados — só um roteador (ou switch de camada 3) pode interligá-las."},
+    {q:"Por que PC-A não consegue falar diretamente com PC-C através do switch?",opts:["Porque o cabo está com defeito","Porque estão em VLANs diferentes, e o switch não encaminha entre VLANs","Porque PC-C está desligado"],correct:1,explain:"VLANs diferentes são domínios de broadcast isolados: só um roteador (ou switch de camada 3) pode interligá-las."},
     {q:"O que permite ao roteador rotear entre VLAN 10 e VLAN 20 usando uma única porta física?",opts:["Sub-interfaces 802.1Q (router-on-a-stick)","Um segundo cabo de rede escondido","O protocolo ARP"],correct:0,explain:"Router-on-a-stick usa uma porta física com sub-interfaces marcadas por VLAN (802.1Q), cada uma atuando como gateway de uma VLAN."}
   ],
   seguranca:[
@@ -2058,7 +2058,7 @@ var QUIZZES = {
     {q:"Quais canais de 2,4 GHz não se sobrepõem entre si?",opts:["1, 6 e 11","2, 5 e 9","Todos se sobrepõem"],correct:0,explain:"Apenas os canais 1, 6 e 11 são totalmente não sobrepostos na faixa de 2,4 GHz."},
     {q:"Qual é o protocolo de segurança Wi-Fi mais atual e seguro?",opts:["WEP","WPA2","WPA3"],correct:2,explain:"WPA3 é o padrão atual, mais resistente a ataques de força bruta offline."},
     {q:"Por que os canais 1, 6 e 11 (em 2,4GHz) não interferem entre si?",opts:["Porque são canais exclusivos para empresas","Porque a faixa que cada um ocupa não se sobrepõe à dos outros dois","Porque usam frequência de 5GHz"],correct:1,explain:"Cada canal 2,4GHz ocupa uma faixa de espectro larga; só 1, 6 e 11 têm espaçamento suficiente para não se sobrepor entre si."},
-    {q:"Durante o handshake de conexão Wi-Fi (WPA2/WPA3), a senha da rede:",opts:["É transmitida em texto puro pelo ar","Nunca é transmitida diretamente — o handshake prova que ambos a conhecem sem enviá-la","Só é usada em redes WEP"],correct:1,explain:"O 4-way handshake (WPA2) e o SAE (WPA3) derivam chaves de criptografia comprovando conhecimento da senha sem jamais transmiti-la pela rede."}
+    {q:"Durante o handshake de conexão Wi-Fi (WPA2/WPA3), a senha da rede:",opts:["É transmitida em texto puro pelo ar","Nunca é transmitida diretamente: o handshake prova que ambos a conhecem sem enviá-la","Só é usada em redes WEP"],correct:1,explain:"O 4-way handshake (WPA2) e o SAE (WPA3) derivam chaves de criptografia comprovando conhecimento da senha sem jamais transmiti-la pela rede."}
   ],
   avancado:[
     {q:"SDN separa a rede em quais dois planos?",opts:["Controle e dados","Público e privado","Rápido e lento"],correct:0,explain:"SDN centraliza o plano de controle, deixando os equipamentos só executarem o encaminhamento (plano de dados)."},
